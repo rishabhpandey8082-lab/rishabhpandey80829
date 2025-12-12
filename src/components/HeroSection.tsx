@@ -1,5 +1,6 @@
 import { ArrowDown, Download, Mail } from "lucide-react";
 import { Button } from "./ui/button";
+import profilePhoto from "@/assets/profile-photo.jpg";
 
 export const HeroSection = () => {
   return (
@@ -17,28 +18,43 @@ export const HeroSection = () => {
 
       <div className="container-narrow mx-auto px-6 md:px-12 lg:px-20 py-32 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
+          {/* Profile Photo */}
+          <div className="mb-8 opacity-0 animate-fade-up">
+            <div className="relative inline-block">
+              <div className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-skin shadow-large mx-auto relative">
+                <img
+                  src={profilePhoto}
+                  alt="Rishabh Raj Pandey - Professional Portrait"
+                  className="w-full h-full object-cover object-top scale-110"
+                />
+              </div>
+              {/* Subtle glow effect */}
+              <div className="absolute inset-0 rounded-full bg-skin/20 blur-xl -z-10 scale-110" />
+            </div>
+          </div>
+
           {/* Overline */}
-          <p className="text-sm md:text-base uppercase tracking-[0.3em] text-muted-foreground mb-6 opacity-0 animate-fade-up">
+          <p className="text-sm md:text-base uppercase tracking-[0.3em] text-muted-foreground mb-4 opacity-0 animate-fade-up delay-100">
             International Business & Economics
           </p>
 
           {/* Main Title */}
-          <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-semibold text-foreground mb-6 opacity-0 animate-fade-up delay-100 leading-tight">
+          <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-semibold text-foreground mb-6 opacity-0 animate-fade-up delay-200 leading-tight">
             Rishabh Raj Pandey
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg md:text-xl text-muted-foreground mb-4 opacity-0 animate-fade-up delay-200">
+          <p className="text-lg md:text-xl text-muted-foreground mb-4 opacity-0 animate-fade-up delay-300">
             Aspiring Financial Analyst
           </p>
 
           {/* Quote */}
-          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-12 opacity-0 animate-fade-up delay-300 italic">
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-12 opacity-0 animate-fade-up delay-400 italic">
             „Ich kombiniere datenbasierte Analyse, internationale Erfahrung und strukturierte Problemlösung, um wertvolle finanzielle Entscheidungen zu unterstützen."
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-fade-up delay-400">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-fade-up delay-500">
             <Button variant="hero" size="xl" asChild>
               <a href="#portfolio">
                 Portfolio ansehen

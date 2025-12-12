@@ -61,7 +61,7 @@ export const HeroSection = () => {
               </a>
             </Button>
             <Button variant="hero-secondary" size="xl" asChild>
-              <a href="#" className="flex items-center gap-2">
+              <a href="/Rishabh_Pandey_Lebenslauf.pdf" download className="flex items-center gap-2">
                 <Download size={18} />
                 Lebenslauf herunterladen
               </a>

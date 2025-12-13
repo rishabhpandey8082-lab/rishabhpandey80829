@@ -1,5 +1,6 @@
 import { ArrowDown, Download, Mail } from "lucide-react";
 import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 import profilePhoto from "@/assets/profile-photo.jpg";
 
 export const HeroSection = () => {
@@ -56,9 +57,9 @@ export const HeroSection = () => {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-fade-up delay-500">
             <Button variant="hero" size="xl" asChild>
-              <a href="#portfolio">
+              <Link to="/portfolio">
                 Portfolio ansehen
-              </a>
+              </Link>
             </Button>
             <Button variant="hero-secondary" size="xl" asChild>
               <a href="/Rishabh_Pandey_Lebenslauf.pdf" download className="flex items-center gap-2">
@@ -67,23 +68,20 @@ export const HeroSection = () => {
               </a>
             </Button>
             <Button variant="hero-outline" size="xl" asChild>
-              <a href="#contact" className="flex items-center gap-2">
+              <Link to="/contact" className="flex items-center gap-2">
                 <Mail size={18} />
                 Kontakt aufnehmen
-              </a>
+              </Link>
             </Button>
           </div>
         </div>
 
         {/* Scroll indicator */}
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 opacity-0 animate-fade-in delay-600">
-          <a
-            href="#about"
-            className="flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          >
+          <div className="flex flex-col items-center gap-2 text-muted-foreground">
             <span className="text-xs uppercase tracking-widest">Scroll</span>
             <ArrowDown size={20} className="animate-bounce" />
-          </a>
+          </div>
         </div>
       </div>
     </section>

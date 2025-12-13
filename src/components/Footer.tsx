@@ -1,4 +1,5 @@
 import { Linkedin, Mail, ArrowUp } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const Footer = () => {
   const scrollToTop = () => {
@@ -10,10 +11,10 @@ export const Footer = () => {
       <div className="container-narrow mx-auto">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-center md:text-left">
-            <p className="font-display text-xl font-semibold text-background mb-2">
+            <Link to="/" className="font-display text-xl font-semibold text-background mb-2 block hover:text-background/80 transition-colors">
               Rishabh Raj Pandey
-            </p>
-            <p className="text-muted text-sm">
+            </Link>
+            <p className="text-background/60 text-sm">
               International Business & Economics Student
             </p>
           </div>
@@ -26,7 +27,7 @@ export const Footer = () => {
               <Mail className="w-5 h-5" />
             </a>
             <a
-              href="https://linkedin.com/in/rishabh-raj-pandey"
+              href="https://www.linkedin.com/in/rishabh-raj-pandey-3b683b324"
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 bg-background/10 rounded-full text-background hover:bg-background/20 transition-colors"
@@ -43,7 +44,7 @@ export const Footer = () => {
         </div>
 
         <div className="border-t border-background/10 mt-8 pt-8 text-center">
-          <p className="text-muted text-sm">
+          <p className="text-background/60 text-sm">
             © {new Date().getFullYear()} Rishabh Raj Pandey. Alle Rechte vorbehalten.
           </p>
         </div>

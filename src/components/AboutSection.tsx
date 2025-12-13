@@ -1,11 +1,12 @@
 import { Briefcase, Globe, TrendingUp, Building } from "lucide-react";
+import { AnimatedSection } from "./AnimatedSection";
 
 export const AboutSection = () => {
   return (
     <section id="about" className="bg-skin section-padding">
       <div className="container-narrow mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <AnimatedSection className="text-center mb-16">
           <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-4">
             Über mich
           </p>
@@ -15,10 +16,10 @@ export const AboutSection = () => {
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Ich bin Rishabh Raj Pandey, ein engagierter Student der International Business & Economics mit Fokus auf Finance, Controlling und Business Analytics. Durch meine internationale Erfahrung in Deutschland, Kasachstan, Nigeria und Argentinien verbinde ich kulturelle Kompetenz mit analytischer Denkweise.
           </p>
-        </div>
+        </AnimatedSection>
 
         {/* Family Business Card */}
-        <div className="bg-card rounded-xl p-8 md:p-12 shadow-medium mb-12">
+        <AnimatedSection delay={0.1} className="bg-card rounded-xl p-8 md:p-12 shadow-medium mb-12">
           <div className="flex items-start gap-4 mb-6">
             <div className="p-3 bg-muted rounded-lg">
               <Building className="w-6 h-6 text-foreground" />
@@ -60,10 +61,10 @@ export const AboutSection = () => {
               Dadurch habe ich ein tiefes Verständnis für Financial Reporting, Kostenstrukturen, Working Capital und betriebliche Effizienz entwickelt.
             </p>
           </div>
-        </div>
+        </AnimatedSection>
 
         {/* International Projects */}
-        <div className="bg-gray-light rounded-xl p-8 md:p-12">
+        <AnimatedSection delay={0.2} className="bg-gray-light rounded-xl p-8 md:p-12">
           <div className="flex items-center gap-3 mb-8">
             <Globe className="w-6 h-6 text-foreground" />
             <h3 className="font-display text-2xl font-semibold text-foreground">
@@ -110,7 +111,7 @@ export const AboutSection = () => {
               </ul>
             </div>
           </div>
-        </div>
+        </AnimatedSection>
       </div>
     </section>
   );

@@ -1,4 +1,5 @@
 import { Lightbulb, Building2, AlertTriangle, Users, Leaf } from "lucide-react";
+import { AnimatedSection } from "./AnimatedSection";
 
 const caseStudies = [
   {
@@ -74,70 +75,68 @@ export const CaseStudiesSection = () => {
     <section id="case-studies" className="py-20 md:py-32 bg-gray-light">
       <div className="container-narrow mx-auto px-6 md:px-12 lg:px-20">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <AnimatedSection className="text-center mb-16">
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             Case Studies
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Praxisorientierte Fallstudien – Analyse, Strategie & Entscheidungsfindung
           </p>
-        </div>
+        </AnimatedSection>
 
         {/* Case Studies Grid */}
         <div className="space-y-8">
           {caseStudies.map((study, index) => (
-            <div
-              key={study.id}
-              className="bg-card rounded-xl p-6 md:p-8 shadow-soft hover:shadow-medium transition-all duration-300 border border-border"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className="flex flex-col md:flex-row gap-6">
-                {/* Icon */}
-                <div className="flex-shrink-0">
-                  <div className={`w-14 h-14 rounded-xl bg-background flex items-center justify-center ${study.color}`}>
-                    <study.icon size={28} />
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="flex-grow space-y-4">
-                  <h3 className="font-display text-xl md:text-2xl font-semibold text-foreground">
-                    {study.title}
-                  </h3>
-                  
-                  <p className="text-muted-foreground">
-                    {study.description}
-                  </p>
-
-                  {/* Insights */}
-                  <div className="space-y-2">
-                    <h4 className="font-medium text-foreground text-sm uppercase tracking-wide">
-                      Wesentliche Erkenntnisse:
-                    </h4>
-                    <ul className="space-y-2">
-                      {study.insights.map((insight, i) => (
-                        <li key={i} className="flex items-start gap-2 text-muted-foreground">
-                          <span className="text-skin mt-1">✓</span>
-                          <span>{insight}</span>
-                        </li>
-                      ))}
-                    </ul>
+            <AnimatedSection key={study.id} delay={index * 0.1}>
+              <div className="bg-card rounded-xl p-6 md:p-8 shadow-soft hover:shadow-medium transition-all duration-300 border border-border">
+                <div className="flex flex-col md:flex-row gap-6">
+                  {/* Icon */}
+                  <div className="flex-shrink-0">
+                    <div className={`w-14 h-14 rounded-xl bg-background flex items-center justify-center ${study.color}`}>
+                      <study.icon size={28} />
+                    </div>
                   </div>
 
-                  {/* Result */}
-                  <div className="pt-4 border-t border-border">
-                    <p className="text-foreground font-medium">
-                      <span className="text-skin">Ergebnis:</span> {study.result}
+                  {/* Content */}
+                  <div className="flex-grow space-y-4">
+                    <h3 className="font-display text-xl md:text-2xl font-semibold text-foreground">
+                      {study.title}
+                    </h3>
+                    
+                    <p className="text-muted-foreground">
+                      {study.description}
                     </p>
+
+                    {/* Insights */}
+                    <div className="space-y-2">
+                      <h4 className="font-medium text-foreground text-sm uppercase tracking-wide">
+                        Wesentliche Erkenntnisse:
+                      </h4>
+                      <ul className="space-y-2">
+                        {study.insights.map((insight, i) => (
+                          <li key={i} className="flex items-start gap-2 text-muted-foreground">
+                            <span className="text-skin mt-1">✓</span>
+                            <span>{insight}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Result */}
+                    <div className="pt-4 border-t border-border">
+                      <p className="text-foreground font-medium">
+                        <span className="text-skin">Ergebnis:</span> {study.result}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </AnimatedSection>
           ))}
         </div>
 
         {/* Bottom Section */}
-        <div className="mt-16 text-center bg-skin/30 rounded-xl p-8 md:p-12">
+        <AnimatedSection delay={0.6} className="mt-16 text-center bg-skin/30 rounded-xl p-8 md:p-12">
           <h3 className="font-display text-2xl md:text-3xl font-semibold text-foreground mb-4">
             Warum Case Studies?
           </h3>
@@ -146,7 +145,7 @@ export const CaseStudiesSection = () => {
             geschäftliche Entscheidungen zu treffen und strategische Lösungen zu entwickeln — zentrale 
             Fähigkeiten für Rollen in Finance, Consulting und Business Analytics.
           </p>
-        </div>
+        </AnimatedSection>
       </div>
     </section>
   );

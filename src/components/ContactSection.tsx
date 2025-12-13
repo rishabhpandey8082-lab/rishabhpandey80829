@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Mail, Phone, Linkedin, MapPin, Send } from "lucide-react";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { AnimatedSection } from "./AnimatedSection";
 
 export const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -31,18 +32,18 @@ export const ContactSection = () => {
     <section id="contact" className="bg-skin section-padding">
       <div className="container-narrow mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <AnimatedSection className="text-center mb-16">
           <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-4">
             Kontakt
           </p>
           <h2 className="font-display text-3xl md:text-5xl font-semibold text-foreground">
             Kontakt aufnehmen
           </h2>
-        </div>
+        </AnimatedSection>
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Info */}
-          <div className="space-y-8">
+          <AnimatedSection delay={0.1} animation="slide-left" className="space-y-8">
             <div className="flex items-start gap-4">
               <div className="p-3 bg-foreground rounded-lg">
                 <Mail className="w-5 h-5 text-background" />
@@ -80,12 +81,12 @@ export const ContactSection = () => {
               <div>
                 <h4 className="font-semibold text-foreground mb-1">LinkedIn</h4>
                 <a 
-                  href="https://linkedin.com/in/rishabh-raj-pandey" 
+                  href="https://www.linkedin.com/in/rishabh-raj-pandey-3b683b324" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  rishabh-raj-pandey
+                  Rishabh Raj Pandey
                 </a>
               </div>
             </div>
@@ -101,65 +102,67 @@ export const ContactSection = () => {
                 </p>
               </div>
             </div>
-          </div>
+          </AnimatedSection>
 
           {/* Contact Form */}
-          <div className="bg-card rounded-xl p-8 shadow-medium">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all"
-                  placeholder="Ihr Name"
-                />
-              </div>
+          <AnimatedSection delay={0.2} animation="slide-right">
+            <div className="bg-card rounded-xl p-8 shadow-medium">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all"
+                    placeholder="Ihr Name"
+                  />
+                </div>
 
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                  E-Mail
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all"
-                  placeholder="ihre.email@beispiel.de"
-                />
-              </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+                    E-Mail
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all"
+                    placeholder="ihre.email@beispiel.de"
+                  />
+                </div>
 
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-                  Nachricht
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  rows={5}
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all resize-none"
-                  placeholder="Ihre Nachricht..."
-                />
-              </div>
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
+                    Nachricht
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    rows={5}
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all resize-none"
+                    placeholder="Ihre Nachricht..."
+                  />
+                </div>
 
-              <Button type="submit" variant="hero" size="lg" className="w-full">
-                <Send className="w-4 h-4 mr-2" />
-                Nachricht senden
-              </Button>
-            </form>
-          </div>
+                <Button type="submit" variant="hero" size="lg" className="w-full">
+                  <Send className="w-4 h-4 mr-2" />
+                  Nachricht senden
+                </Button>
+              </form>
+            </div>
+          </AnimatedSection>
         </div>
       </div>
     </section>

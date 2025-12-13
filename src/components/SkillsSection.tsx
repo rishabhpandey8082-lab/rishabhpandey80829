@@ -1,4 +1,5 @@
 import { Brain, Wrench, Database, Palette } from "lucide-react";
+import { AnimatedSection } from "./AnimatedSection";
 
 const softSkills = [
   "Analytisches Denken",
@@ -33,18 +34,18 @@ export const SkillsSection = () => {
     <section id="skills" className="bg-background section-padding">
       <div className="container-narrow mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <AnimatedSection className="text-center mb-16">
           <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-4">
             Fähigkeiten
           </p>
           <h2 className="font-display text-3xl md:text-5xl font-semibold text-foreground">
             Kompetenzen & Tools
           </h2>
-        </div>
+        </AnimatedSection>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Soft Skills */}
-          <div className="bg-muted rounded-xl p-8">
+          <AnimatedSection delay={0.1} animation="slide-left" className="bg-muted rounded-xl p-8">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 bg-foreground rounded-lg">
                 <Brain className="w-5 h-5 text-background" />
@@ -63,10 +64,10 @@ export const SkillsSection = () => {
                 </span>
               ))}
             </div>
-          </div>
+          </AnimatedSection>
 
           {/* Finance Tools */}
-          <div className="bg-skin rounded-xl p-8">
+          <AnimatedSection delay={0.2} animation="slide-right" className="bg-skin rounded-xl p-8">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 bg-foreground rounded-lg">
                 <Wrench className="w-5 h-5 text-background" />
@@ -86,10 +87,10 @@ export const SkillsSection = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </AnimatedSection>
 
           {/* ERP Systems */}
-          <div className="bg-skin rounded-xl p-8">
+          <AnimatedSection delay={0.3} animation="slide-left" className="bg-skin rounded-xl p-8">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 bg-foreground rounded-lg">
                 <Database className="w-5 h-5 text-background" />
@@ -109,10 +110,10 @@ export const SkillsSection = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </AnimatedSection>
 
           {/* Other Tools */}
-          <div className="bg-muted rounded-xl p-8">
+          <AnimatedSection delay={0.4} animation="slide-right" className="bg-muted rounded-xl p-8">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 bg-foreground rounded-lg">
                 <Palette className="w-5 h-5 text-background" />
@@ -132,7 +133,7 @@ export const SkillsSection = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </AnimatedSection>
         </div>
       </div>
     </section>

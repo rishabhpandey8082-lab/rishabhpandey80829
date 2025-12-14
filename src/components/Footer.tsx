@@ -1,7 +1,10 @@
 import { Linkedin, Mail, ArrowUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const Footer = () => {
+  const { t } = useLanguage();
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -15,7 +18,7 @@ export const Footer = () => {
               Rishabh Raj Pandey
             </Link>
             <p className="text-background/60 text-sm">
-              International Business & Economics Student
+              {t.footer.title}
             </p>
           </div>
 
@@ -45,7 +48,7 @@ export const Footer = () => {
 
         <div className="border-t border-background/10 mt-8 pt-8 text-center">
           <p className="text-background/60 text-sm">
-            © {new Date().getFullYear()} Rishabh Raj Pandey. Alle Rechte vorbehalten.
+            © {new Date().getFullYear()} Rishabh Raj Pandey. {t.footer.rights}
           </p>
         </div>
       </div>

@@ -1,19 +1,21 @@
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Globe } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-
-const navLinks = [
-  { name: "Startseite", href: "/" },
-  { name: "Über mich", href: "/about" },
-  { name: "Portfolio", href: "/portfolio" },
-  { name: "Kontakt", href: "/contact" },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const { language, t, toggleLanguage } = useLanguage();
+
+  const navLinks = [
+    { name: t.nav.home, href: "/" },
+    { name: t.nav.about, href: "/about" },
+    { name: t.nav.portfolio, href: "/portfolio" },
+    { name: t.nav.contact, href: "/contact" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,7 +47,7 @@ export const Navigation = () => {
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <Link
-                key={link.name}
+                key={link.href}
                 to={link.href}
                 className={cn(
                   "text-sm font-medium transition-colors relative group",
@@ -63,15 +65,35 @@ export const Navigation = () => {
                 />
               </Link>
             ))}
+            
+            {/* Language Toggle */}
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border hover:bg-muted transition-all duration-300 text-sm font-medium"
+            >
+              <Globe size={16} />
+              <span>{language === 'de' ? 'EN' : 'DE'}</span>
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 text-foreground"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="flex items-center gap-4 md:hidden">
+            {/* Language Toggle Mobile */}
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-border hover:bg-muted transition-all duration-300 text-sm font-medium"
+            >
+              <Globe size={14} />
+              <span>{language === 'de' ? 'EN' : 'DE'}</span>
+            </button>
+            
+            <button
+              className="p-2 text-foreground"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
@@ -84,7 +106,7 @@ export const Navigation = () => {
           <div className="flex flex-col gap-4 py-4">
             {navLinks.map((link) => (
               <Link
-                key={link.name}
+                key={link.href}
                 to={link.href}
                 onClick={() => setIsOpen(false)}
                 className={cn(

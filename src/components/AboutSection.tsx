@@ -1,20 +1,23 @@
-import { Briefcase, Globe, TrendingUp, Building } from "lucide-react";
+import { Briefcase, Globe, Building } from "lucide-react";
 import { AnimatedSection } from "./AnimatedSection";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const AboutSection = () => {
+  const { t } = useLanguage();
+
   return (
     <section id="about" className="bg-skin section-padding">
       <div className="container-narrow mx-auto">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-16">
           <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-4">
-            Über mich
+            {t.about.title}
           </p>
           <h2 className="font-display text-3xl md:text-5xl font-semibold text-foreground mb-6">
-            Mein Hintergrund
+            {t.about.familyBusiness.subtitle}
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Ich bin Rishabh Raj Pandey, ein engagierter Student der International Business & Economics mit Fokus auf Finance, Controlling und Business Analytics. Durch meine internationale Erfahrung in Deutschland, Kasachstan, Nigeria und Argentinien verbinde ich kulturelle Kompetenz mit analytischer Denkweise.
+            {t.about.description}
           </p>
         </AnimatedSection>
 
@@ -26,27 +29,22 @@ export const AboutSection = () => {
             </div>
             <div>
               <h3 className="font-display text-2xl font-semibold text-foreground mb-2">
-                Family Business – Finance & Operations
+                {t.about.familyBusiness.title}
               </h3>
-              <p className="text-muted-foreground">2018 – Heute</p>
+              <p className="text-muted-foreground">2018 – Present</p>
             </div>
           </div>
 
           <p className="text-muted-foreground mb-8 leading-relaxed">
-            Seit 2018 unterstütze ich unser familiengeführtes Pharmaunternehmen im Bereich Finanzen, Buchhaltung, Cashflow-Management und ERP-Systeme.
+            {t.about.familyBusiness.description}
           </p>
 
           <div className="mb-8">
-            <h4 className="font-semibold text-foreground mb-4">Meine Aufgaben:</h4>
+            <h4 className="font-semibold text-foreground mb-4">
+              {t.about.familyBusiness.title}:
+            </h4>
             <ul className="grid md:grid-cols-2 gap-3">
-              {[
-                "Finanzberichte, Umsatz- & Margenanalysen",
-                "Cashflow- und Liquiditätsmanagement",
-                "Rechnungsstellung, Debitoren & Zahlungsabwicklung",
-                "Verkaufsdatenanalyse & Trendermittlung",
-                "Bestandsplanung & Lieferantenmanagement",
-                "Anwendung von Marg ERP auf fortgeschrittenem Niveau"
-              ].map((task, index) => (
+              {t.about.familyBusiness.tasks.map((task, index) => (
                 <li key={index} className="flex items-start gap-2 text-muted-foreground">
                   <span className="text-foreground mt-1">✔</span>
                   <span>{task}</span>
@@ -56,9 +54,9 @@ export const AboutSection = () => {
           </div>
 
           <div className="bg-muted rounded-lg p-6">
-            <h4 className="font-semibold text-foreground mb-2">Warum das wertvoll ist:</h4>
+            <h4 className="font-semibold text-foreground mb-2">Value:</h4>
             <p className="text-muted-foreground leading-relaxed">
-              Dadurch habe ich ein tiefes Verständnis für Financial Reporting, Kostenstrukturen, Working Capital und betriebliche Effizienz entwickelt.
+              {t.about.familyBusiness.value}
             </p>
           </div>
         </AnimatedSection>
@@ -68,47 +66,33 @@ export const AboutSection = () => {
           <div className="flex items-center gap-3 mb-8">
             <Globe className="w-6 h-6 text-foreground" />
             <h3 className="font-display text-2xl font-semibold text-foreground">
-              Internationale Projekte
+              {t.about.internationalProjects.title}
             </h3>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-card rounded-lg p-6 shadow-soft">
               <h4 className="font-semibold text-foreground mb-3">
-                COIL Programme
+                {t.about.internationalProjects.coil.title}
               </h4>
               <p className="text-sm text-muted-foreground mb-3">
-                Deutschland, Nigeria, Argentinien
+                {t.about.internationalProjects.coil.countries}
               </p>
-              <ul className="space-y-2 text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <span className="text-foreground">•</span>
-                  Entwicklung innovativer Geschäftsmodelle
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-foreground">•</span>
-                  Interkulturelle Teamarbeit
-                </li>
-              </ul>
+              <p className="text-muted-foreground">
+                {t.about.internationalProjects.coil.description}
+              </p>
             </div>
 
             <div className="bg-card rounded-lg p-6 shadow-soft">
               <h4 className="font-semibold text-foreground mb-3">
-                International Project Management
+                {t.about.internationalProjects.projectManagement.title}
               </h4>
               <p className="text-sm text-muted-foreground mb-3">
-                Kasachstan
+                {t.about.internationalProjects.projectManagement.country}
               </p>
-              <ul className="space-y-2 text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <span className="text-foreground">•</span>
-                  Projektplanung, Ressourcensteuerung
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-foreground">•</span>
-                  Teamkoordination
-                </li>
-              </ul>
+              <p className="text-muted-foreground">
+                {t.about.internationalProjects.projectManagement.description}
+              </p>
             </div>
           </div>
         </AnimatedSection>

@@ -2,8 +2,11 @@ import { ArrowDown, Download, Mail } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 import profilePhoto from "@/assets/profile-photo.jpg";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const HeroSection = () => {
+  const { t } = useLanguage();
+
   return (
     <section
       id="home"
@@ -36,41 +39,41 @@ export const HeroSection = () => {
 
           {/* Overline */}
           <p className="text-sm md:text-base uppercase tracking-[0.3em] text-muted-foreground mb-4 opacity-0 animate-fade-up delay-100">
-            International Business & Economics
+            {t.hero.greeting}
           </p>
 
           {/* Main Title */}
           <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-semibold text-foreground mb-6 opacity-0 animate-fade-up delay-200 leading-tight">
-            Rishabh Raj Pandey
+            {t.hero.title}
           </h1>
 
           {/* Subtitle */}
           <p className="text-lg md:text-xl text-muted-foreground mb-4 opacity-0 animate-fade-up delay-300">
-            Aspiring Financial Analyst
+            {t.hero.subtitle}
           </p>
 
           {/* Quote */}
           <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-12 opacity-0 animate-fade-up delay-400 italic">
-            „Ich kombiniere datenbasierte Analyse, internationale Erfahrung und strukturierte Problemlösung, um wertvolle finanzielle Entscheidungen zu unterstützen."
+            „{t.hero.quote}"
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-fade-up delay-500">
             <Button variant="hero" size="xl" asChild>
               <Link to="/portfolio">
-                Portfolio ansehen
+                {t.hero.viewPortfolio}
               </Link>
             </Button>
             <Button variant="hero-secondary" size="xl" asChild>
               <a href="/Rishabh_Pandey_Lebenslauf.pdf" download className="flex items-center gap-2">
                 <Download size={18} />
-                Lebenslauf herunterladen
+                {t.hero.downloadCV}
               </a>
             </Button>
             <Button variant="hero-outline" size="xl" asChild>
               <Link to="/contact" className="flex items-center gap-2">
                 <Mail size={18} />
-                Kontakt aufnehmen
+                {t.hero.contactMe}
               </Link>
             </Button>
           </div>
@@ -79,7 +82,7 @@ export const HeroSection = () => {
         {/* Scroll indicator */}
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 opacity-0 animate-fade-in delay-600">
           <div className="flex flex-col items-center gap-2 text-muted-foreground">
-            <span className="text-xs uppercase tracking-widest">Scroll</span>
+            <span className="text-xs uppercase tracking-widest">{t.hero.scrollDown}</span>
             <ArrowDown size={20} className="animate-bounce" />
           </div>
         </div>

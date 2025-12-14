@@ -1,7 +1,10 @@
 import { Linkedin } from "lucide-react";
 import { AnimatedSection } from "./AnimatedSection";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const LinkedInSection = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="py-16 bg-foreground">
       <div className="container-narrow mx-auto px-6 md:px-12 lg:px-20">
@@ -9,10 +12,10 @@ export const LinkedInSection = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-center md:text-left">
               <h3 className="font-display text-2xl md:text-3xl font-semibold text-background mb-2">
-                Vernetzen Sie sich mit mir
+                {t.linkedin.title}
               </h3>
               <p className="text-background/70">
-                Lassen Sie uns auf LinkedIn in Kontakt treten
+                {t.linkedin.subtitle}
               </p>
             </div>
             
@@ -24,8 +27,8 @@ export const LinkedInSection = () => {
             >
               <Linkedin className="w-6 h-6" />
               <div className="text-left">
-                <p className="font-semibold">Rishabh Raj Pandey</p>
-                <p className="text-sm text-muted-foreground">LinkedIn Profil</p>
+                <p className="font-semibold">{t.linkedin.profileName}</p>
+                <p className="text-sm text-muted-foreground">{t.linkedin.profileLabel}</p>
               </div>
             </a>
           </div>

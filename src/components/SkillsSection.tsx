@@ -1,45 +1,20 @@
 import { Brain, Wrench, Database, Palette } from "lucide-react";
 import { AnimatedSection } from "./AnimatedSection";
-
-const softSkills = [
-  "Analytisches Denken",
-  "Problemlösung",
-  "Organisation & Struktur",
-  "Detailorientiert",
-  "Teamfähigkeit",
-  "Kommunikationsstärke",
-  "Flexibilität"
-];
-
-const financeTools = [
-  "Excel (Pivot, SVERWEIS, Dashboards)",
-  "Budgetierung & Reporting",
-  "KPI & Trendanalyse",
-  "Financial Modeling (Basis)"
-];
-
-const erpSystems = [
-  "SAP ERP",
-  "Marg ERP (fortgeschritten)"
-];
-
-const otherTools = [
-  "Canva",
-  "Power BI Grundlagen",
-  "MS Office (PowerPoint, Outlook)"
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const SkillsSection = () => {
+  const { t } = useLanguage();
+
   return (
     <section id="skills" className="bg-background section-padding">
       <div className="container-narrow mx-auto">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-16">
           <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-4">
-            Fähigkeiten
+            {t.skills.softSkills.title}
           </p>
           <h2 className="font-display text-3xl md:text-5xl font-semibold text-foreground">
-            Kompetenzen & Tools
+            {t.skills.title}
           </h2>
         </AnimatedSection>
 
@@ -51,11 +26,11 @@ export const SkillsSection = () => {
                 <Brain className="w-5 h-5 text-background" />
               </div>
               <h3 className="font-display text-xl font-semibold text-foreground">
-                Soft Skills
+                {t.skills.softSkills.title}
               </h3>
             </div>
             <div className="flex flex-wrap gap-3">
-              {softSkills.map((skill, index) => (
+              {t.skills.softSkills.items.map((skill, index) => (
                 <span
                   key={index}
                   className="px-4 py-2 bg-card text-foreground rounded-full text-sm font-medium shadow-soft hover:shadow-medium transition-shadow"
@@ -73,11 +48,11 @@ export const SkillsSection = () => {
                 <Wrench className="w-5 h-5 text-background" />
               </div>
               <h3 className="font-display text-xl font-semibold text-foreground">
-                Finance Tools
+                {t.skills.financeTools.title}
               </h3>
             </div>
             <ul className="space-y-3">
-              {financeTools.map((tool, index) => (
+              {t.skills.financeTools.items.map((tool, index) => (
                 <li
                   key={index}
                   className="flex items-center gap-3 text-muted-foreground"
@@ -96,11 +71,11 @@ export const SkillsSection = () => {
                 <Database className="w-5 h-5 text-background" />
               </div>
               <h3 className="font-display text-xl font-semibold text-foreground">
-                ERP Systeme
+                {t.skills.erpSystems.title}
               </h3>
             </div>
             <ul className="space-y-3">
-              {erpSystems.map((system, index) => (
+              {t.skills.erpSystems.items.map((system, index) => (
                 <li
                   key={index}
                   className="flex items-center gap-3 text-muted-foreground"
@@ -119,11 +94,11 @@ export const SkillsSection = () => {
                 <Palette className="w-5 h-5 text-background" />
               </div>
               <h3 className="font-display text-xl font-semibold text-foreground">
-                Weitere Tools
+                {t.skills.otherTools.title}
               </h3>
             </div>
             <ul className="space-y-3">
-              {otherTools.map((tool, index) => (
+              {t.skills.otherTools.items.map((tool, index) => (
                 <li
                   key={index}
                   className="flex items-center gap-3 text-muted-foreground"

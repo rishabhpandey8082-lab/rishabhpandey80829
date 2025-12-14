@@ -1,68 +1,119 @@
 import { Award, ExternalLink } from "lucide-react";
 import { Button } from "./ui/button";
 import { AnimatedSection } from "./AnimatedSection";
-
-const certificates = [
-  {
-    title: "Citi – Finance Job Simulation",
-    description: "Dieses Simulationsprogramm vermittelte praxisrelevante Analystenaufgaben der Citi-Bank.",
-    learnings: [
-      "KPI-Analyse zur Bewertung der Unternehmensperformance",
-      "Validierung von RWA-Berechnungen",
-      "Risikoanalysen im Kreditkartenbereich",
-      "Monitoring von Limits und Einlagen"
-    ],
-    link: "#"
-  },
-  {
-    title: "Goldman Sachs – Controllers Division Simulation",
-    description: "Ein tiefgehendes Controlling-Training im Investmentbanking.",
-    learnings: [
-      "NAV-Berechnung",
-      "Fund Accounting",
-      "Trendanalyse mit Excel",
-      "Erstellung professioneller Controlling-Reports"
-    ],
-    link: "#"
-  },
-  {
-    title: "CFI – Careers in Finance",
-    description: "Grundlagen zu Finanzmärkten, Rollen, Investmentprozessen.",
-    learnings: [],
-    link: "#"
-  },
-  {
-    title: "Executive Diploma in Leadership & Management",
-    description: "Führungsgrundsätze, Organisationsmanagement & Teamdynamik.",
-    learnings: [],
-    link: "#",
-    provider: "Udemy"
-  },
-  {
-    title: "MITx – Becoming an Entrepreneur",
-    description: "Geschäftsmodelle, Marktanalyse, Innovationsmanagement.",
-    learnings: [],
-    link: "#"
-  },
-  {
-    title: "DelftX – Electric Cars Technology",
-    description: "Elektromobilität, Batteriesysteme & nachhaltige Technologien.",
-    learnings: [],
-    link: "#"
-  }
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const CertificatesSection = () => {
+  const { t, language } = useLanguage();
+
+  const certificates = language === 'de' ? [
+    {
+      title: "Citi – Finance Job Simulation",
+      description: "Dieses Simulationsprogramm vermittelte praxisrelevante Analystenaufgaben der Citi-Bank.",
+      learnings: [
+        "KPI-Analyse zur Bewertung der Unternehmensperformance",
+        "Validierung von RWA-Berechnungen",
+        "Risikoanalysen im Kreditkartenbereich",
+        "Monitoring von Limits und Einlagen"
+      ],
+      link: "#"
+    },
+    {
+      title: "Goldman Sachs – Controllers Division Simulation",
+      description: "Ein tiefgehendes Controlling-Training im Investmentbanking.",
+      learnings: [
+        "NAV-Berechnung",
+        "Fund Accounting",
+        "Trendanalyse mit Excel",
+        "Erstellung professioneller Controlling-Reports"
+      ],
+      link: "#"
+    },
+    {
+      title: "CFI – Careers in Finance",
+      description: "Grundlagen zu Finanzmärkten, Rollen, Investmentprozessen.",
+      learnings: [],
+      link: "#"
+    },
+    {
+      title: "Executive Diploma in Leadership & Management",
+      description: "Führungsgrundsätze, Organisationsmanagement & Teamdynamik.",
+      learnings: [],
+      link: "#",
+      provider: "Udemy"
+    },
+    {
+      title: "MITx – Becoming an Entrepreneur",
+      description: "Geschäftsmodelle, Marktanalyse, Innovationsmanagement.",
+      learnings: [],
+      link: "#"
+    },
+    {
+      title: "DelftX – Electric Cars Technology",
+      description: "Elektromobilität, Batteriesysteme & nachhaltige Technologien.",
+      learnings: [],
+      link: "#"
+    }
+  ] : [
+    {
+      title: "Citi – Finance Job Simulation",
+      description: "This simulation program taught practical analyst tasks at Citi Bank.",
+      learnings: [
+        "KPI analysis for company performance evaluation",
+        "Validation of RWA calculations",
+        "Risk analysis in credit card area",
+        "Monitoring of limits and deposits"
+      ],
+      link: "#"
+    },
+    {
+      title: "Goldman Sachs – Controllers Division Simulation",
+      description: "An in-depth controlling training in investment banking.",
+      learnings: [
+        "NAV calculation",
+        "Fund Accounting",
+        "Trend analysis with Excel",
+        "Creating professional controlling reports"
+      ],
+      link: "#"
+    },
+    {
+      title: "CFI – Careers in Finance",
+      description: "Fundamentals of financial markets, roles, investment processes.",
+      learnings: [],
+      link: "#"
+    },
+    {
+      title: "Executive Diploma in Leadership & Management",
+      description: "Leadership principles, organizational management & team dynamics.",
+      learnings: [],
+      link: "#",
+      provider: "Udemy"
+    },
+    {
+      title: "MITx – Becoming an Entrepreneur",
+      description: "Business models, market analysis, innovation management.",
+      learnings: [],
+      link: "#"
+    },
+    {
+      title: "DelftX – Electric Cars Technology",
+      description: "Electric mobility, battery systems & sustainable technologies.",
+      learnings: [],
+      link: "#"
+    }
+  ];
+
   return (
     <section id="certificates" className="bg-gray-light section-padding">
       <div className="container-narrow mx-auto">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-16">
           <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-4">
-            Zertifikate
+            {t.certificates.subtitle}
           </p>
           <h2 className="font-display text-3xl md:text-5xl font-semibold text-foreground">
-            Weiterbildungen
+            {t.certificates.title}
           </h2>
         </AnimatedSection>
 
@@ -93,7 +144,7 @@ export const CertificatesSection = () => {
                 {cert.learnings.length > 0 && (
                   <div className="mb-4">
                     <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
-                      Was ich gelernt habe:
+                      {t.certificates.keyLearnings}:
                     </p>
                     <ul className="space-y-1">
                       {cert.learnings.map((learning, idx) => (
@@ -109,7 +160,7 @@ export const CertificatesSection = () => {
                 <div className="mt-auto pt-4">
                   <Button variant="ghost" size="sm" asChild className="w-full text-muted-foreground hover:text-foreground">
                     <a href={cert.link} className="flex items-center justify-center gap-2">
-                      Zertifikatslink hinzufügen
+                      {t.certificates.viewCertificate}
                       <ExternalLink className="w-4 h-4" />
                     </a>
                   </Button>

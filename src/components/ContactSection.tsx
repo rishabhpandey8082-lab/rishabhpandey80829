@@ -3,6 +3,7 @@ import { Mail, Phone, Linkedin, MapPin, Send } from "lucide-react";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { AnimatedSection } from "./AnimatedSection";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -11,12 +12,13 @@ export const ContactSection = () => {
     message: ""
   });
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast({
-      title: "Nachricht gesendet",
-      description: "Vielen Dank für Ihre Nachricht. Ich werde mich bald bei Ihnen melden.",
+      title: t.contact.toast.title,
+      description: t.contact.toast.description,
     });
     setFormData({ name: "", email: "", message: "" });
   };
@@ -34,10 +36,10 @@ export const ContactSection = () => {
         {/* Section Header */}
         <AnimatedSection className="text-center mb-16">
           <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-4">
-            Kontakt
+            {t.contact.title}
           </p>
           <h2 className="font-display text-3xl md:text-5xl font-semibold text-foreground">
-            Kontakt aufnehmen
+            {t.contact.subtitle}
           </h2>
         </AnimatedSection>
 
@@ -49,7 +51,7 @@ export const ContactSection = () => {
                 <Mail className="w-5 h-5 text-background" />
               </div>
               <div>
-                <h4 className="font-semibold text-foreground mb-1">E-Mail</h4>
+                <h4 className="font-semibold text-foreground mb-1">{t.contact.info.email}</h4>
                 <a 
                   href="mailto:rishabhpandey80829@gmail.com" 
                   className="text-muted-foreground hover:text-foreground transition-colors"
@@ -64,7 +66,7 @@ export const ContactSection = () => {
                 <Phone className="w-5 h-5 text-background" />
               </div>
               <div>
-                <h4 className="font-semibold text-foreground mb-1">Telefon</h4>
+                <h4 className="font-semibold text-foreground mb-1">{t.contact.info.phone}</h4>
                 <a 
                   href="tel:+491727711065" 
                   className="text-muted-foreground hover:text-foreground transition-colors"
@@ -79,7 +81,7 @@ export const ContactSection = () => {
                 <Linkedin className="w-5 h-5 text-background" />
               </div>
               <div>
-                <h4 className="font-semibold text-foreground mb-1">LinkedIn</h4>
+                <h4 className="font-semibold text-foreground mb-1">{t.contact.info.linkedin}</h4>
                 <a 
                   href="https://www.linkedin.com/in/rishabh-raj-pandey-3b683b324" 
                   target="_blank" 
@@ -96,7 +98,7 @@ export const ContactSection = () => {
                 <MapPin className="w-5 h-5 text-background" />
               </div>
               <div>
-                <h4 className="font-semibold text-foreground mb-1">Standort</h4>
+                <h4 className="font-semibold text-foreground mb-1">{t.contact.info.location}</h4>
                 <p className="text-muted-foreground">
                   Schmalkalden / Erfurt, Thüringen, Deutschland
                 </p>
@@ -110,7 +112,7 @@ export const ContactSection = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                    Name
+                    {t.contact.form.name}
                   </label>
                   <input
                     type="text"
@@ -120,13 +122,13 @@ export const ContactSection = () => {
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all"
-                    placeholder="Ihr Name"
+                    placeholder={t.contact.form.namePlaceholder}
                   />
                 </div>
 
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                    E-Mail
+                    {t.contact.form.email}
                   </label>
                   <input
                     type="email"
@@ -136,13 +138,13 @@ export const ContactSection = () => {
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all"
-                    placeholder="ihre.email@beispiel.de"
+                    placeholder={t.contact.form.emailPlaceholder}
                   />
                 </div>
 
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-                    Nachricht
+                    {t.contact.form.message}
                   </label>
                   <textarea
                     id="message"
@@ -152,13 +154,13 @@ export const ContactSection = () => {
                     required
                     rows={5}
                     className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all resize-none"
-                    placeholder="Ihre Nachricht..."
+                    placeholder={t.contact.form.messagePlaceholder}
                   />
                 </div>
 
                 <Button type="submit" variant="hero" size="lg" className="w-full">
                   <Send className="w-4 h-4 mr-2" />
-                  Nachricht senden
+                  {t.contact.form.send}
                 </Button>
               </form>
             </div>

@@ -1,8 +1,9 @@
+import { forwardRef } from "react";
 import { Linkedin, Mail, ArrowUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-export const Footer = () => {
+export const Footer = forwardRef<HTMLElement>((_, ref) => {
   const { t } = useLanguage();
 
   const scrollToTop = () => {
@@ -10,7 +11,7 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="bg-foreground py-12 px-6 md:px-12 lg:px-20">
+    <footer ref={ref} className="bg-foreground py-12 px-6 md:px-12 lg:px-20">
       <div className="container-narrow mx-auto">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-center md:text-left">
@@ -54,4 +55,6 @@ export const Footer = () => {
       </div>
     </footer>
   );
-};
+});
+
+Footer.displayName = "Footer";

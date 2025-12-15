@@ -1,12 +1,13 @@
+import { forwardRef } from "react";
 import { Linkedin } from "lucide-react";
 import { AnimatedSection } from "./AnimatedSection";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-export const LinkedInSection = () => {
+export const LinkedInSection = forwardRef<HTMLElement>((_, ref) => {
   const { t } = useLanguage();
 
   return (
-    <section className="py-16 bg-foreground">
+    <section ref={ref} className="py-16 bg-foreground">
       <div className="container-narrow mx-auto px-6 md:px-12 lg:px-20">
         <AnimatedSection animation="fade-up">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
@@ -36,4 +37,6 @@ export const LinkedInSection = () => {
       </div>
     </section>
   );
-};
+});
+
+LinkedInSection.displayName = "LinkedInSection";

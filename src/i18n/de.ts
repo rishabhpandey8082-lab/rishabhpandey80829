@@ -246,6 +246,7 @@ export const de = {
       message: "Nachricht",
       messagePlaceholder: "Ihre Nachricht...",
       send: "Nachricht senden",
+      sending: "Wird gesendet...",
     },
     info: {
       email: "E-Mail",
@@ -257,6 +258,9 @@ export const de = {
     toast: {
       title: "Nachricht gesendet!",
       description: "Vielen Dank für Ihre Nachricht. Ich werde mich bald bei Ihnen melden.",
+      errorTitle: "Fehler",
+      errorDescription: "Die Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+      errorValidation: "Bitte füllen Sie alle Felder korrekt aus.",
     },
   },
 

@@ -16,7 +16,7 @@ export const CertificatesSection = () => {
         "Risikoanalysen im Kreditkartenbereich",
         "Monitoring von Limits und Einlagen"
       ],
-      link: "#"
+      link: "/certificates/Citi_Bank_completion_certificate.pdf"
     },
     {
       title: "Goldman Sachs – Controllers Division Simulation",
@@ -27,32 +27,46 @@ export const CertificatesSection = () => {
         "Trendanalyse mit Excel",
         "Erstellung professioneller Controlling-Reports"
       ],
-      link: "#"
+      link: "/certificates/Goldman_Sachs_completion_certificate.pdf"
     },
     {
       title: "CFI – Careers in Finance",
       description: "Grundlagen zu Finanzmärkten, Rollen, Investmentprozessen.",
       learnings: [],
-      link: "#"
+      link: "/certificates/CFI_Careers_In_Finance.pdf"
     },
     {
       title: "Executive Diploma in Leadership & Management",
       description: "Führungsgrundsätze, Organisationsmanagement & Teamdynamik.",
       learnings: [],
-      link: "#",
-      provider: "Udemy"
-    },
-    {
-      title: "MITx – Becoming an Entrepreneur",
-      description: "Geschäftsmodelle, Marktanalyse, Innovationsmanagement.",
-      learnings: [],
-      link: "#"
+      link: "/certificates/MTF_Institute_of_Management_Technology_and_Finance.pdf",
+      provider: "MTF Institute"
     },
     {
       title: "DelftX – Electric Cars Technology",
       description: "Elektromobilität, Batteriesysteme & nachhaltige Technologien.",
       learnings: [],
-      link: "#"
+      link: "/certificates/Electric_Cars_Technology_DelftX_Certificate.pdf"
+    },
+    {
+      title: "Design Thinking COIL Programm",
+      description: "Internationales Kollaborationsprojekt zur Entwicklung innovativer Lösungen durch Design Thinking.",
+      learnings: [
+        "Nutzerorientierte Problemlösung",
+        "Prototyping und Testing",
+        "Interkulturelle Teamarbeit"
+      ],
+      link: "/certificates/Design_Thinking_Beschreibung.pdf"
+    },
+    {
+      title: "DKU – Internationale Projektfinanzierung",
+      description: "Fortbildung zu internationaler Projektfinanzierung und Investitionsanalyse.",
+      learnings: [
+        "Projektbewertung",
+        "Internationale Finanzierungsmodelle",
+        "Risikomanagement"
+      ],
+      link: "/certificates/DKU_Bescheinigung.pdf"
     }
   ] : [
     {
@@ -64,7 +78,7 @@ export const CertificatesSection = () => {
         "Risk analysis in credit card area",
         "Monitoring of limits and deposits"
       ],
-      link: "#"
+      link: "/certificates/Citi_Bank_completion_certificate.pdf"
     },
     {
       title: "Goldman Sachs – Controllers Division Simulation",
@@ -75,32 +89,46 @@ export const CertificatesSection = () => {
         "Trend analysis with Excel",
         "Creating professional controlling reports"
       ],
-      link: "#"
+      link: "/certificates/Goldman_Sachs_completion_certificate.pdf"
     },
     {
       title: "CFI – Careers in Finance",
       description: "Fundamentals of financial markets, roles, investment processes.",
       learnings: [],
-      link: "#"
+      link: "/certificates/CFI_Careers_In_Finance.pdf"
     },
     {
       title: "Executive Diploma in Leadership & Management",
       description: "Leadership principles, organizational management & team dynamics.",
       learnings: [],
-      link: "#",
-      provider: "Udemy"
-    },
-    {
-      title: "MITx – Becoming an Entrepreneur",
-      description: "Business models, market analysis, innovation management.",
-      learnings: [],
-      link: "#"
+      link: "/certificates/MTF_Institute_of_Management_Technology_and_Finance.pdf",
+      provider: "MTF Institute"
     },
     {
       title: "DelftX – Electric Cars Technology",
       description: "Electric mobility, battery systems & sustainable technologies.",
       learnings: [],
-      link: "#"
+      link: "/certificates/Electric_Cars_Technology_DelftX_Certificate.pdf"
+    },
+    {
+      title: "Design Thinking COIL Program",
+      description: "International collaboration project for developing innovative solutions through Design Thinking.",
+      learnings: [
+        "User-centered problem solving",
+        "Prototyping and testing",
+        "Intercultural teamwork"
+      ],
+      link: "/certificates/Design_Thinking_Beschreibung.pdf"
+    },
+    {
+      title: "DKU – International Project Finance",
+      description: "Training in international project financing and investment analysis.",
+      learnings: [
+        "Project evaluation",
+        "International financing models",
+        "Risk management"
+      ],
+      link: "/certificates/DKU_Bescheinigung.pdf"
     }
   ];
 
@@ -159,7 +187,7 @@ export const CertificatesSection = () => {
 
                 <div className="mt-auto pt-4">
                   <Button variant="ghost" size="sm" asChild className="w-full text-muted-foreground hover:text-foreground">
-                    <a href={cert.link} className="flex items-center justify-center gap-2">
+                    <a href={cert.link} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
                       {t.certificates.viewCertificate}
                       <ExternalLink className="w-4 h-4" />
                     </a>

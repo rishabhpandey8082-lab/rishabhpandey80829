@@ -1,9 +1,21 @@
 import { useState } from "react";
-import { Mail, Phone, Linkedin, MapPin, Send } from "lucide-react";
+import { Mail, Phone, Linkedin, MapPin, Send, Loader2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { AnimatedSection } from "./AnimatedSection";
 import { useLanguage } from "@/contexts/LanguageContext";
+import emailjs from "@emailjs/browser";
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100),
+  email: z.string().trim().email("Invalid email").max(255),
+  message: z.string().trim().min(1, "Message is required").max(1000),
+});
+
+const EMAILJS_SERVICE_ID = "service_twtuhws";
+const EMAILJS_TEMPLATE_ID = "template_j84c4jy";
+const EMAILJS_PUBLIC_KEY = "8jMjDhOZnSL7p-56t";
 
 export const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -11,16 +23,52 @@ export const ContactSection = () => {
     email: "",
     message: ""
   });
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: t.contact.toast.title,
-      description: t.contact.toast.description,
-    });
-    setFormData({ name: "", email: "", message: "" });
+    
+    const validation = contactSchema.safeParse(formData);
+    if (!validation.success) {
+      toast({
+        title: t.contact.toast.errorTitle,
+        description: t.contact.toast.errorValidation,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          message: formData.message,
+          to_name: "Rishabh",
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+
+      toast({
+        title: t.contact.toast.title,
+        description: t.contact.toast.description,
+      });
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      toast({
+        title: t.contact.toast.errorTitle,
+        description: t.contact.toast.errorDescription,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -121,7 +169,8 @@ export const ContactSection = () => {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all"
+                    disabled={isLoading}
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all disabled:opacity-50"
                     placeholder={t.contact.form.namePlaceholder}
                   />
                 </div>
@@ -137,7 +186,8 @@ export const ContactSection = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all"
+                    disabled={isLoading}
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all disabled:opacity-50"
                     placeholder={t.contact.form.emailPlaceholder}
                   />
                 </div>
@@ -152,15 +202,25 @@ export const ContactSection = () => {
                     value={formData.message}
                     onChange={handleChange}
                     required
+                    disabled={isLoading}
                     rows={5}
-                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all resize-none"
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all resize-none disabled:opacity-50"
                     placeholder={t.contact.form.messagePlaceholder}
                   />
                 </div>
 
-                <Button type="submit" variant="hero" size="lg" className="w-full">
-                  <Send className="w-4 h-4 mr-2" />
-                  {t.contact.form.send}
+                <Button type="submit" variant="hero" size="lg" className="w-full" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      {t.contact.form.sending}
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4 mr-2" />
+                      {t.contact.form.send}
+                    </>
+                  )}
                 </Button>
               </form>
             </div>

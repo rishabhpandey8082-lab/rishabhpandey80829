@@ -12,28 +12,34 @@ export const HeroSection = () => {
       id="home"
       className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden"
     >
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-[0.02]">
+      {/* Animated background pattern */}
+      <div className="absolute inset-0 opacity-[0.03]">
         <div className="absolute inset-0" style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--foreground)) 1px, transparent 0)`,
           backgroundSize: '40px 40px'
         }} />
       </div>
 
+      {/* Floating decorative elements */}
+      <div className="absolute top-20 left-10 w-20 h-20 border border-skin rounded-full opacity-20 animate-float" />
+      <div className="absolute bottom-32 right-20 w-32 h-32 border border-skin rounded-full opacity-10 animate-float" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-1/3 right-10 w-16 h-16 bg-skin/10 rounded-full blur-xl animate-pulse-soft" />
+
       <div className="container-narrow mx-auto px-6 md:px-12 lg:px-20 py-32 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Profile Photo */}
           <div className="mb-8 opacity-0 animate-fade-up">
-            <div className="relative inline-block">
-              <div className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-skin shadow-large mx-auto relative">
+            <div className="relative inline-block group">
+              <div className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-skin shadow-large mx-auto relative transition-transform duration-500 group-hover:scale-105">
                 <img
                   src={profilePhoto}
                   alt="Rishabh Raj Pandey - Professional Portrait"
                   className="w-full h-full object-cover object-top scale-110"
                 />
               </div>
-              {/* Subtle glow effect */}
-              <div className="absolute inset-0 rounded-full bg-skin/20 blur-xl -z-10 scale-110" />
+              {/* Animated glow effect */}
+              <div className="absolute inset-0 rounded-full bg-skin/30 blur-xl -z-10 scale-110 animate-pulse-soft" />
+              <div className="absolute inset-0 rounded-full border-2 border-skin/20 scale-125 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
           </div>
 

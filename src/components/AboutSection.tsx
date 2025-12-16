@@ -1,6 +1,7 @@
-import { Briefcase, Globe, Building } from "lucide-react";
+import { Briefcase, Globe, Building, TrendingUp } from "lucide-react";
 import { AnimatedSection } from "./AnimatedSection";
 import { useLanguage } from "@/contexts/LanguageContext";
+import financeHero from "@/assets/finance-hero.jpg";
 
 export const AboutSection = () => {
   const { t } = useLanguage();
@@ -21,10 +22,28 @@ export const AboutSection = () => {
           </p>
         </AnimatedSection>
 
+        {/* Finance Hero Image */}
+        <AnimatedSection delay={0.1} animation="fade-in" className="mb-12">
+          <div className="relative rounded-2xl overflow-hidden shadow-large hover-lift">
+            <img 
+              src={financeHero} 
+              alt="Investment Banking and Finance" 
+              className="w-full h-64 md:h-80 object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
+            <div className="absolute bottom-6 left-6 right-6">
+              <div className="flex items-center gap-3 text-background">
+                <TrendingUp className="w-6 h-6 animate-pulse-soft" />
+                <span className="font-display text-xl font-semibold">Investment Banking Focus</span>
+              </div>
+            </div>
+          </div>
+        </AnimatedSection>
+
         {/* Family Business Card */}
-        <AnimatedSection delay={0.1} className="bg-card rounded-xl p-8 md:p-12 shadow-medium mb-12">
+        <AnimatedSection delay={0.2} className="bg-card rounded-xl p-8 md:p-12 shadow-medium mb-12 hover-lift">
           <div className="flex items-start gap-4 mb-6">
-            <div className="p-3 bg-muted rounded-lg">
+            <div className="p-3 bg-muted rounded-lg hover-glow transition-all">
               <Building className="w-6 h-6 text-foreground" />
             </div>
             <div>
@@ -45,7 +64,7 @@ export const AboutSection = () => {
             </h4>
             <ul className="grid md:grid-cols-2 gap-3">
               {t.about.familyBusiness.tasks.map((task, index) => (
-                <li key={index} className="flex items-start gap-2 text-muted-foreground">
+                <li key={index} className="flex items-start gap-2 text-muted-foreground opacity-0 animate-fade-up" style={{ animationDelay: `${0.3 + index * 0.1}s`, animationFillMode: 'forwards' }}>
                   <span className="text-foreground mt-1">✔</span>
                   <span>{task}</span>
                 </li>
@@ -53,7 +72,7 @@ export const AboutSection = () => {
             </ul>
           </div>
 
-          <div className="bg-muted rounded-lg p-6">
+          <div className="bg-muted rounded-lg p-6 hover-glow transition-all">
             <h4 className="font-semibold text-foreground mb-2">Value:</h4>
             <p className="text-muted-foreground leading-relaxed">
               {t.about.familyBusiness.value}
@@ -62,16 +81,16 @@ export const AboutSection = () => {
         </AnimatedSection>
 
         {/* International Projects */}
-        <AnimatedSection delay={0.2} className="bg-gray-light rounded-xl p-8 md:p-12">
+        <AnimatedSection delay={0.3} className="bg-gray-light rounded-xl p-8 md:p-12">
           <div className="flex items-center gap-3 mb-8">
-            <Globe className="w-6 h-6 text-foreground" />
+            <Globe className="w-6 h-6 text-foreground animate-pulse-soft" />
             <h3 className="font-display text-2xl font-semibold text-foreground">
               {t.about.internationalProjects.title}
             </h3>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-card rounded-lg p-6 shadow-soft">
+            <div className="bg-card rounded-lg p-6 shadow-soft hover-lift">
               <h4 className="font-semibold text-foreground mb-3">
                 {t.about.internationalProjects.coil.title}
               </h4>
@@ -83,7 +102,7 @@ export const AboutSection = () => {
               </p>
             </div>
 
-            <div className="bg-card rounded-lg p-6 shadow-soft">
+            <div className="bg-card rounded-lg p-6 shadow-soft hover-lift">
               <h4 className="font-semibold text-foreground mb-3">
                 {t.about.internationalProjects.projectManagement.title}
               </h4>

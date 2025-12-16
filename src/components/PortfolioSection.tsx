@@ -2,6 +2,7 @@ import { BarChart3, Calculator, TrendingDown, LineChart, ExternalLink } from "lu
 import { Button } from "./ui/button";
 import { AnimatedSection } from "./AnimatedSection";
 import { useLanguage } from "@/contexts/LanguageContext";
+import financeCharts from "@/assets/finance-charts.jpg";
 
 const projectIcons = [BarChart3, Calculator, TrendingDown, LineChart];
 
@@ -56,26 +57,44 @@ export const PortfolioSection = () => {
           </h2>
         </AnimatedSection>
 
+        {/* Finance Analytics Image */}
+        <AnimatedSection delay={0.1} animation="fade-in" className="mb-12">
+          <div className="relative rounded-2xl overflow-hidden shadow-large hover-lift">
+            <img 
+              src={financeCharts} 
+              alt="Financial Analytics Dashboard" 
+              className="w-full h-48 md:h-64 object-cover opacity-90"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-foreground/60 to-transparent" />
+            <div className="absolute inset-0 flex items-center justify-start pl-8">
+              <div className="text-background">
+                <p className="text-sm uppercase tracking-widest mb-2 opacity-80">Data-Driven</p>
+                <h3 className="font-display text-2xl md:text-3xl font-semibold">Financial Analysis</h3>
+              </div>
+            </div>
+          </div>
+        </AnimatedSection>
+
         {/* Projects Grid */}
         <div className="grid md:grid-cols-2 gap-8">
           {projects.map((project, index) => {
             const IconComponent = projectIcons[index];
             return (
-              <AnimatedSection key={index} delay={index * 0.1}>
-                <div className="group bg-card rounded-xl p-8 shadow-medium hover:shadow-glow transition-all duration-300 hover:-translate-y-1 h-full">
+              <AnimatedSection key={index} delay={0.2 + index * 0.1}>
+                <div className="group bg-card rounded-xl p-8 shadow-medium hover:shadow-glow transition-all duration-300 hover:-translate-y-2 h-full">
                   <div className="flex items-start justify-between mb-6">
-                    <div className="p-3 bg-muted rounded-lg group-hover:bg-skin transition-colors">
+                    <div className="p-3 bg-muted rounded-lg group-hover:bg-skin group-hover:scale-110 transition-all duration-300">
                       <IconComponent className="w-6 h-6 text-foreground" />
                     </div>
                     <a
                       href={project.link}
-                      className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+                      className="p-2 text-muted-foreground hover:text-foreground hover:scale-110 transition-all duration-300"
                     >
                       <ExternalLink className="w-5 h-5" />
                     </a>
                   </div>
 
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3">
+                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 group-hover:translate-x-1 transition-transform">
                     {project.title}
                   </h3>
                   
@@ -87,7 +106,7 @@ export const PortfolioSection = () => {
                     {project.tools.map((tool, toolIndex) => (
                       <span
                         key={toolIndex}
-                        className="px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs font-medium"
+                        className="px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs font-medium group-hover:bg-skin transition-colors"
                       >
                         {tool}
                       </span>
@@ -95,10 +114,10 @@ export const PortfolioSection = () => {
                   </div>
 
                   <div className="mt-6 pt-6 border-t border-border">
-                    <Button variant="outline" size="sm" asChild className="w-full group-hover:bg-foreground group-hover:text-background transition-colors">
+                    <Button variant="outline" size="sm" asChild className="w-full group-hover:bg-foreground group-hover:text-background transition-all duration-300">
                       <a href={project.link}>
                         {t.portfolio.viewProject}
-                        <ExternalLink className="w-4 h-4 ml-2" />
+                        <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                       </a>
                     </Button>
                   </div>
@@ -109,8 +128,8 @@ export const PortfolioSection = () => {
         </div>
 
         {/* Placeholder for more projects */}
-        <AnimatedSection delay={0.5} className="text-center mt-12">
-          <p className="text-background/60 text-sm">
+        <AnimatedSection delay={0.6} className="text-center mt-12">
+          <p className="text-background/60 text-sm animate-pulse-soft">
             {language === 'de' ? 'Weitere Projekte werden hinzugefügt' : 'More projects coming soon'}
           </p>
         </AnimatedSection>

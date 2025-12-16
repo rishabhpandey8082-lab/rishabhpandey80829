@@ -100,11 +100,11 @@ export const ContactSection = () => {
               </div>
               <div>
                 <h4 className="font-semibold text-foreground mb-1">{t.contact.info.email}</h4>
-                <a 
-                  href="mailto:rishabhpandey8082@gmail.com" 
+              <a 
+                  href="mailto:rishabhpandey80829@gmail.com" 
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  rishabhpandey8082@gmail.com
+                  rishabhpandey80829@gmail.com
                 </a>
               </div>
             </div>
@@ -148,7 +148,7 @@ export const ContactSection = () => {
               <div>
                 <h4 className="font-semibold text-foreground mb-1">{t.contact.info.location}</h4>
                 <p className="text-muted-foreground">
-                  Schmalkalden / Erfurt, Thüringen, Deutschland
+                  Schmalkalden, 98574, Thüringen, Deutschland
                 </p>
               </div>
             </div>

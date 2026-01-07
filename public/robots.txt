@@ -1,3 +1,6 @@
+# Robots.txt for rishabhrajpandey.online
+# https://rishabhrajpandey.online
+
 User-agent: Googlebot
 Allow: /
 
@@ -12,3 +15,9 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+# Sitemap
+Sitemap: https://rishabhrajpandey.online/sitemap.xml
+
+# Crawl-delay (optional, for politeness)
+Crawl-delay: 10

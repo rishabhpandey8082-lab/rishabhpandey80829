@@ -66,11 +66,11 @@ export const de = {
     },
     financeTools: {
       title: "Finance Tools",
-      items: ["Microsoft Excel", "Power BI", "Financial Modeling", "Bloomberg Terminal", "SAP"],
+      items: ["Microsoft Excel", "Power BI", "Power BI Desktop", "Financial Modeling", "Bloomberg Terminal", "SAP"],
     },
     erpSystems: {
       title: "ERP Systeme",
-      items: ["SAP S/4HANA", "Microsoft Dynamics", "Oracle ERP"],
+      items: ["SAP S/4HANA", "Microsoft Dynamics", "Oracle ERP", "MARG ERP"],
     },
     otherTools: {
       title: "Weitere Tools",

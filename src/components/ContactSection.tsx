@@ -148,7 +148,7 @@ export const ContactSection = () => {
               <div>
                 <h4 className="font-semibold text-foreground mb-1">{t.contact.info.location}</h4>
                 <p className="text-muted-foreground">
-                  Schmalkalden, 98574, Thüringen, Deutschland
+                  Deutschland
                 </p>
               </div>
             </div>

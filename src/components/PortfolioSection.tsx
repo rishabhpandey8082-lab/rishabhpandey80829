@@ -1,4 +1,4 @@
-import { BarChart3, Calculator, TrendingDown, LineChart, ExternalLink } from "lucide-react";
+import { BarChart3, Calculator, TrendingDown, LineChart, Download } from "lucide-react";
 import { Button } from "./ui/button";
 import { AnimatedSection } from "./AnimatedSection";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -16,7 +16,7 @@ export const PortfolioSection = () => {
         ? "Interaktives Dashboard zur Visualisierung von Finanzkennzahlen und KPIs mit Excel und Power BI."
         : "Interactive dashboard for visualizing financial metrics and KPIs with Excel and Power BI.",
       tools: ["Excel", "Power BI"],
-      link: "#"
+      link: "/projects/Finanz_Dashboard.xlsx"
     },
     {
       title: language === 'de' ? "NPV & IRR Analyse" : "NPV & IRR Analysis",
@@ -24,7 +24,7 @@ export const PortfolioSection = () => {
         ? "Investitionsbewertungsmodell zur Berechnung von Kapitalwert und internem Zinsfuß."
         : "Investment valuation model for calculating net present value and internal rate of return.",
       tools: ["Excel", "Financial Modeling"],
-      link: "#"
+      link: "/projects/NPV_IRR.xlsx"
     },
     {
       title: language === 'de' ? "Break-Even Analyse" : "Break-Even Analysis",
@@ -32,7 +32,7 @@ export const PortfolioSection = () => {
         ? "Detaillierte Gewinnschwellenanalyse für verschiedene Geschäftsszenarien."
         : "Detailed break-even analysis for various business scenarios.",
       tools: ["Excel", language === 'de' ? "Szenarioplanung" : "Scenario Planning"],
-      link: "#"
+      link: "/projects/Break_Even_Professional.xlsx"
     },
     {
       title: language === 'de' ? "Unternehmensbewertung (DCF)" : "Company Valuation (DCF)",
@@ -40,7 +40,7 @@ export const PortfolioSection = () => {
         ? "Discounted Cash Flow Modell zur Bewertung von Unternehmen."
         : "Discounted Cash Flow model for company valuation.",
       tools: ["Excel", "DCF Modeling"],
-      link: "#"
+      link: "/projects/DCF_Valuation.xlsx"
     }
   ];
 
@@ -88,9 +88,10 @@ export const PortfolioSection = () => {
                     </div>
                     <a
                       href={project.link}
+                      download
                       className="p-2 text-muted-foreground hover:text-foreground hover:scale-110 transition-all duration-300"
                     >
-                      <ExternalLink className="w-5 h-5" />
+                      <Download className="w-5 h-5" />
                     </a>
                   </div>
 
@@ -115,9 +116,9 @@ export const PortfolioSection = () => {
 
                   <div className="mt-6 pt-6 border-t border-border">
                     <Button variant="outline" size="sm" asChild className="w-full group-hover:bg-foreground group-hover:text-background transition-all duration-300">
-                      <a href={project.link}>
-                        {t.portfolio.viewProject}
-                        <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                      <a href={project.link} download>
+                        {language === 'de' ? 'Herunterladen' : 'Download Excel'}
+                        <Download className="w-4 h-4 ml-2 group-hover:translate-y-0.5 transition-transform" />
                       </a>
                     </Button>
                   </div>

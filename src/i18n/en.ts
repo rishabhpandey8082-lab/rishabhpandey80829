@@ -23,6 +23,22 @@ export const en = {
   about: {
     title: "About Me",
     description: "I am an International Business and Foreign Trade student with a passion for financial analysis and data-driven decision making. My academic journey has led me through various international projects and practical experiences.",
+    workExperience: {
+      title: "Work Experience",
+      moveas: {
+        title: "Working Student in Financial Accounting",
+        company: "moVeas GmbH",
+        period: "Mar 2026 – Present",
+        location: "Germany",
+        tasks: [
+          "Supported the finance team in daily financial accounting tasks, ensuring accuracy and compliance",
+          "Reviewed and processed incoming and outgoing invoices, contributing to streamlined operations",
+          "Assisted with invoice verification and data entry, enhancing the efficiency of financial records management",
+          "Maintained financial records and master data, supporting the overall integrity of the accounting department",
+        ],
+        skills: "Financial Accounting, Microsoft Excel +9 skills",
+      },
+    },
     familyBusiness: {
       title: "Family Business Experience",
       subtitle: "Finance & Operations",

@@ -36,7 +36,7 @@ export const de = {
           "Rechnungsprüfung und Dateneingabe zur Effizienzsteigerung im Finanzwesen",
           "Pflege von Finanzdaten und Stammdaten zur Sicherung der Integrität der Buchhaltung",
         ],
-        skills: "Finanzbuchhaltung, Microsoft Excel +9 Skills",
+        skills: ["Finanzbuchhaltung", "Microsoft Excel", "Rechnungsbearbeitung", "Kreditorenbuchhaltung", "Datenmanagement", "Jahresabschlüsse", "Microsoft Office", "Lieferantenkoordination & Prozessoptimierung", "DATEV", "Bankabstimmung", "Fakturierung & Abrechnung", "Hauptbuch", "Steuer-Compliance"],
       },
     },
     familyBusiness: {

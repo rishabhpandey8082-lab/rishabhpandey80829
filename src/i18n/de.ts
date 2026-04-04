@@ -23,6 +23,22 @@ export const de = {
   about: {
     title: "Über mich",
     description: "Ich bin Student der Internationalen Betriebswirtschaft und Außenwirtschaft mit einer Leidenschaft für Finanzanalyse und datengestützte Entscheidungsfindung. Meine akademische Reise hat mich durch verschiedene internationale Projekte und praktische Erfahrungen geführt.",
+    workExperience: {
+      title: "Berufserfahrung",
+      moveas: {
+        title: "Werkstudent in der Finanzbuchhaltung",
+        company: "moVeas GmbH",
+        period: "Mär 2026 – Heute",
+        location: "Deutschland",
+        tasks: [
+          "Unterstützung des Finanzteams bei täglichen Buchhaltungsaufgaben mit Fokus auf Genauigkeit und Compliance",
+          "Prüfung und Bearbeitung von Ein- und Ausgangsrechnungen zur Optimierung der Abläufe",
+          "Rechnungsprüfung und Dateneingabe zur Effizienzsteigerung im Finanzwesen",
+          "Pflege von Finanzdaten und Stammdaten zur Sicherung der Integrität der Buchhaltung",
+        ],
+        skills: "Finanzbuchhaltung, Microsoft Excel +9 Skills",
+      },
+    },
     familyBusiness: {
       title: "Familienbetrieb Erfahrung",
       subtitle: "Finance & Operations",

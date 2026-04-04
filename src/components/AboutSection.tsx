@@ -40,8 +40,37 @@ export const AboutSection = () => {
           </div>
         </AnimatedSection>
 
+        {/* moVeas Work Experience */}
+        <AnimatedSection delay={0.15} className="bg-card rounded-xl p-8 md:p-12 shadow-medium mb-12 hover-lift border-l-4 border-primary">
+          <div className="flex items-start gap-4 mb-6">
+            <div className="p-3 bg-primary/10 rounded-lg hover-glow transition-all">
+              <Briefcase className="w-6 h-6 text-foreground" />
+            </div>
+            <div>
+              <h3 className="font-display text-2xl font-semibold text-foreground mb-1">
+                {t.about.workExperience.moveas.title}
+              </h3>
+              <p className="text-foreground font-medium">{t.about.workExperience.moveas.company}</p>
+              <p className="text-muted-foreground text-sm">{t.about.workExperience.moveas.period} · {t.about.workExperience.moveas.location}</p>
+            </div>
+          </div>
+
+          <ul className="space-y-3 mb-6">
+            {t.about.workExperience.moveas.tasks.map((task, index) => (
+              <li key={index} className="flex items-start gap-2 text-muted-foreground opacity-0 animate-fade-up" style={{ animationDelay: `${0.2 + index * 0.1}s`, animationFillMode: 'forwards' }}>
+                <span className="text-foreground mt-1">•</span>
+                <span>{task}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex flex-wrap gap-2">
+            <span className="text-xs bg-muted text-muted-foreground px-3 py-1 rounded-full">{t.about.workExperience.moveas.skills}</span>
+          </div>
+        </AnimatedSection>
+
         {/* Family Business Card */}
-        <AnimatedSection delay={0.2} className="bg-card rounded-xl p-8 md:p-12 shadow-medium mb-12 hover-lift">
+        <AnimatedSection delay={0.25} className="bg-card rounded-xl p-8 md:p-12 shadow-medium mb-12 hover-lift">
           <div className="flex items-start gap-4 mb-6">
             <div className="p-3 bg-muted rounded-lg hover-glow transition-all">
               <Building className="w-6 h-6 text-foreground" />

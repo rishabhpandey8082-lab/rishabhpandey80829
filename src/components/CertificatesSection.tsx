@@ -67,6 +67,17 @@ export const CertificatesSection = () => {
         "Risikomanagement"
       ],
       link: "/certificates/DKU_Bescheinigung.pdf"
+    },
+    {
+      title: "DATEV – Rechnungswesen",
+      description: "Zertifizierter Wissensnachweis im Bereich Rechnungswesen mit DATEV-Software.",
+      learnings: [
+        "Buchführung mit DATEV",
+        "Kontierung und Belegerfassung",
+        "Jahresabschlussarbeiten"
+      ],
+      link: "/certificates/DATEV_Rechnungswesen_Zertifikat.pdf",
+      provider: "DATEV"
     }
   ] : [
     {

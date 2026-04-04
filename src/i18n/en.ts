@@ -36,7 +36,7 @@ export const en = {
           "Assisted with invoice verification and data entry, enhancing the efficiency of financial records management",
           "Maintained financial records and master data, supporting the overall integrity of the accounting department",
         ],
-        skills: "Financial Accounting, Microsoft Excel +9 skills",
+        skills: ["Financial Accounting", "Microsoft Excel", "Invoice Processing", "Accounts Payable (AP)", "Data Management", "Financial Statements", "Microsoft Office", "Vendor Coordination & Process Optimization", "DATEV", "Bank Reconciliation", "Invoicing & Billing", "General Ledger", "Tax Compliance"],
       },
     },
     familyBusiness: {

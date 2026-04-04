@@ -65,7 +65,11 @@ export const AboutSection = () => {
           </ul>
 
           <div className="flex flex-wrap gap-2">
-            <span className="text-xs bg-muted text-muted-foreground px-3 py-1 rounded-full">{t.about.workExperience.moveas.skills}</span>
+            {t.about.workExperience.moveas.skills.map((skill, index) => (
+              <span key={index} className="text-xs bg-muted text-muted-foreground px-3 py-1 rounded-full">
+                {skill}
+              </span>
+            ))}
           </div>
         </AnimatedSection>
 

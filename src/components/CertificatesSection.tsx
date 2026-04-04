@@ -140,6 +140,17 @@ export const CertificatesSection = () => {
         "Risk management"
       ],
       link: "/certificates/DKU_Bescheinigung.pdf"
+    },
+    {
+      title: "DATEV – Accounting",
+      description: "Certified knowledge proof in accounting with DATEV software.",
+      learnings: [
+        "Bookkeeping with DATEV",
+        "Account assignment and document entry",
+        "Year-end closing procedures"
+      ],
+      link: "/certificates/DATEV_Rechnungswesen_Zertifikat.pdf",
+      provider: "DATEV"
     }
   ];
 

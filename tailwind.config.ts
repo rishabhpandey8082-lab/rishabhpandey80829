@@ -79,6 +79,7 @@ export default {
         'glow': '0 0 30px rgba(245, 230, 211, 0.5)',
       },
       keyframes: {
+        float: { "0%,100%": { transform: "translateY(0)" }, "50%": { transform: "translateY(-7px)" } },
         marquee: { from: { transform: "translateX(0)" }, to: { transform: "translateX(-50%)" } },
         "spin-slow": { to: { transform: "rotate(360deg)" } },
         "accordion-down": {
@@ -91,6 +92,7 @@ export default {
         },
       },
       animation: {
+        float: "float 6s ease-in-out infinite",
         marquee: "marquee 40s linear infinite",
         "spin-slow": "spin-slow 18s linear infinite",
         "accordion-down": "accordion-down 0.2s ease-out",

@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { jobs, ui } from "@/data/content";
 import { Reveal, SectionHead } from "./fx";
@@ -5,15 +7,24 @@ import { Reveal, SectionHead } from "./fx";
 export const ExperienceSection = () => {
   const { language } = useLanguage();
   const u = ui[language];
+  const list = useRef<HTMLOListElement>(null);
+  const { scrollYProgress } = useScroll({ target: list, offset: ["start 70%", "end 60%"] });
+  const grow = useSpring(scrollYProgress, { stiffness: 90, damping: 24 });
 
   return (
     <section id="experience" className="section">
       <div className="wrap">
         <SectionHead eyebrow={u.expEyebrow} title={u.expTitle} />
-        <ol className="divide-y divide-border border-y border-border">
+        <ol ref={list} className="relative pl-8 md:pl-12">
+          <span className="absolute bottom-2 left-[7px] top-2 w-px bg-border md:left-[11px]" />
+          <motion.span style={{ scaleY: grow }} className="absolute bottom-2 left-[7px] top-2 w-px origin-top bg-accent md:left-[11px]" />
           {jobs[language].map((j, i) => (
-            <li key={i}>
-              <Reveal className="grid gap-4 py-8 md:grid-cols-[220px_1fr] md:gap-10">
+            <li key={i} className="relative pb-12 last:pb-0">
+              <motion.span
+                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-80px" }} transition={{ type: "spring", stiffness: 300, damping: 18 }}
+                className="absolute -left-8 top-2 h-[15px] w-[15px] rounded-full border-2 border-accent bg-background md:-left-12 md:h-[23px] md:w-[23px]"
+              />
+              <Reveal className="card card-hover grid gap-4 p-6 md:grid-cols-[210px_1fr] md:gap-10 md:p-8">
                 <div>
                   <p className="font-medium">{j.company}</p>
                   <p className="mt-1 text-sm text-muted-foreground">{[j.period, j.location].filter(Boolean).join(" · ")}</p>

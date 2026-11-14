@@ -1,46 +1,44 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
+import { lazy, Suspense } from "react";
+import { Toaster } from "sonner";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Portfolio from "./pages/Portfolio";
-import Contact from "./pages/Contact";
-import NotFound from "./pages/NotFound";
+import { Navigation } from "@/components/Navigation";
+import { HeroSection } from "@/components/HeroSection";
+import { AboutSection } from "@/components/AboutSection";
+import { SkillsSection } from "@/components/SkillsSection";
+import { ProjectsSection } from "@/components/ProjectsSection";
+import { CaseStudiesSection } from "@/components/CaseStudiesSection";
+import { CertificatesSection } from "@/components/CertificatesSection";
+import { ContactSection } from "@/components/ContactSection";
+import { Footer } from "@/components/Footer";
+import { Cursor, ScrollProgress } from "@/components/fx";
 
-const queryClient = new QueryClient();
+// The 3D world is code-split so the page text renders immediately.
+const Scene = lazy(() => import("@/three/Scene"));
 
-const AnimatedRoutes = () => {
-  const location = useLocation();
-  
-  return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/portfolio" element={<Portfolio />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </AnimatePresence>
-  );
-};
-
+// No router: this is a single scroll-driven page, which also removes the
+// GitHub Pages "404 on refresh / sub-path" problem the old BrowserRouter had.
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <LanguageProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AnimatedRoutes />
-        </BrowserRouter>
-      </LanguageProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <LanguageProvider>
+    <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_0%,hsl(170_60%_12%)_0%,hsl(225_45%_4%)_60%)]" />
+    <Suspense fallback={null}><Scene /></Suspense>
+    <div className="pointer-events-none fixed inset-0 z-[1] bg-background/25" />
+    <ScrollProgress />
+    <Cursor />
+    <Toaster theme="dark" position="bottom-right" />
+    <div className="relative z-10">
+      <Navigation />
+      <main>
+        <HeroSection />
+        <AboutSection />
+        <SkillsSection />
+        <ProjectsSection />
+        <CaseStudiesSection />
+        <CertificatesSection />
+        <ContactSection />
+      </main>
+      <Footer />
+    </div>
+  </LanguageProvider>
 );
 
 export default App;

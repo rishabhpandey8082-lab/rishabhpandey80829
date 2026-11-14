@@ -1,354 +1,108 @@
-import { ArrowDown, Download, Mail, TrendingUp, BarChart3, DollarSign, PieChart, LineChart, Briefcase } from "lucide-react";
-import { Button } from "./ui/button";
-import { Link } from "react-router-dom";
-import profilePhoto from "@/assets/profile-photo.jpg";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowDown, Download, Mail } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { extra } from "@/data/content";
+import { asset } from "@/lib/assets";
+import profilePhoto from "@/assets/profile-photo.jpg";
+import { TiltCard } from "./fx";
 
-const FloatingIcon = ({ Icon, initialX, initialY, delay }: { 
-  Icon: typeof TrendingUp; 
-  initialX: string; 
-  initialY: string; 
-  delay: number 
-}) => (
-  <motion.div
-    className="absolute text-foreground/20 hidden md:block"
-    style={{ left: initialX, top: initialY }}
-    initial={{ opacity: 0, scale: 0 }}
-    animate={{ 
-      opacity: [0, 0.3, 0.2, 0.3],
-      scale: 1,
-      y: [0, -30, 0],
-      x: [0, 15, 0],
-      rotate: [0, 10, -5, 0],
-    }}
-    transition={{
-      opacity: { duration: 4, repeat: Infinity, delay },
-      y: { duration: 6, repeat: Infinity, delay, ease: "easeInOut" },
-      x: { duration: 8, repeat: Infinity, delay, ease: "easeInOut" },
-      rotate: { duration: 10, repeat: Infinity, delay, ease: "easeInOut" },
-      scale: { duration: 0.5, delay },
-    }}
-  >
-    <Icon size={40} strokeWidth={1} />
-  </motion.div>
+const NameLine = ({ text, delay = 0, gradient = false }: { text: string; delay?: number; gradient?: boolean }) => (
+  <span className="block overflow-hidden pb-2" aria-label={text}>
+    {text.split("").map((ch, i) => (
+      <motion.span
+        key={i}
+        aria-hidden
+        initial={{ y: "110%", rotateX: -80, opacity: 0 }}
+        animate={{ y: 0, rotateX: 0, opacity: 1 }}
+        transition={{ duration: 0.9, delay: delay + i * 0.045, ease: [0.22, 1, 0.36, 1] }}
+        className={`inline-block ${gradient ? "text-gradient" : ""}`}
+        style={{ transformOrigin: "bottom", whiteSpace: "pre" }}
+      >
+        {ch}
+      </motion.span>
+    ))}
+  </span>
 );
 
 export const HeroSection = () => {
-  const { t } = useLanguage();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const { t, language } = useLanguage();
+  const ex = extra[language];
+  const [role, setRole] = useState(0);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX - window.innerWidth / 2) / 50,
-        y: (e.clientY - window.innerHeight / 2) / 50,
-      });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+    const id = setInterval(() => setRole((r) => (r + 1) % ex.roles.length), 2600);
+    return () => clearInterval(id);
+  }, [ex.roles.length]);
+
+  const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <section
-      id="home"
-      className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden"
-    >
-      {/* Animated gradient orbs */}
-      <motion.div
-        className="absolute top-0 -left-40 w-96 h-96 bg-skin/40 rounded-full blur-3xl"
-        animate={{
-          x: [0, 100, 0],
-          y: [0, 50, 0],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        style={{ x: mousePosition.x * 2, y: mousePosition.y * 2 }}
-      />
-      <motion.div
-        className="absolute bottom-0 -right-40 w-[500px] h-[500px] bg-skin/30 rounded-full blur-3xl"
-        animate={{
-          x: [0, -80, 0],
-          y: [0, -60, 0],
-          scale: [1, 1.3, 1],
-        }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        style={{ x: mousePosition.x * -2, y: mousePosition.y * -2 }}
-      />
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-skin/10 rounded-full blur-3xl"
-        animate={{
-          scale: [1, 1.1, 1],
-          opacity: [0.1, 0.2, 0.1],
-        }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
+    <section id="home" className="relative flex min-h-screen items-center px-5 pb-20 pt-32 md:px-8">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/80 via-background/35 to-transparent" />
+      <div className="mx-auto grid w-full max-w-6xl items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+        <div>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="eyebrow mb-6 flex items-center gap-3">
+            <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-70" /><span className="relative inline-flex h-2 w-2 rounded-full bg-primary" /></span>
+            {t.hero.greeting}
+          </motion.p>
 
-      {/* Animated grid pattern */}
-      <div className="absolute inset-0 opacity-[0.04]">
-        <motion.div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `linear-gradient(hsl(var(--foreground)) 1px, transparent 1px), 
-                              linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px'
-          }}
-          animate={{ opacity: [0.02, 0.05, 0.02] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        />
-      </div>
+          <h1 className="font-display text-[clamp(2.6rem,7.4vw,5.9rem)] font-bold leading-[0.98] tracking-tight" style={{ perspective: 800 }}>
+            <NameLine text="Rishabh Raj" delay={0.3} />
+            <NameLine text="Pandey" delay={0.75} gradient />
+          </h1>
 
-      {/* Floating Finance Icons */}
-      <FloatingIcon Icon={TrendingUp} initialX="8%" initialY="25%" delay={0} />
-      <FloatingIcon Icon={BarChart3} initialX="88%" initialY="18%" delay={0.5} />
-      <FloatingIcon Icon={DollarSign} initialX="12%" initialY="68%" delay={1} />
-      <FloatingIcon Icon={PieChart} initialX="85%" initialY="60%" delay={1.5} />
-      <FloatingIcon Icon={LineChart} initialX="5%" initialY="45%" delay={2} />
-      <FloatingIcon Icon={Briefcase} initialX="92%" initialY="38%" delay={2.5} />
+          <div className="mt-6 flex h-9 items-center gap-3 font-mono text-sm text-muted-foreground md:text-base">
+            <span className="text-primary">&gt;</span>
+            <AnimatePresence mode="wait">
+              <motion.span key={role} initial={{ opacity: 0, y: 14, filter: "blur(6px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={{ opacity: 0, y: -14, filter: "blur(6px)" }} transition={{ duration: 0.4 }} className="text-foreground">
+                {ex.roles[role]}
+              </motion.span>
+            </AnimatePresence>
+            <span className="h-5 w-[2px] animate-pulse bg-primary" />
+          </div>
 
-      {/* Animated decorative lines */}
-      <motion.div
-        className="absolute top-32 left-0 w-48 h-[1px] bg-gradient-to-r from-transparent via-foreground/20 to-transparent hidden md:block"
-        animate={{ x: [-100, 200], opacity: [0, 1, 0] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-48 right-0 w-64 h-[1px] bg-gradient-to-r from-transparent via-foreground/20 to-transparent hidden md:block"
-        animate={{ x: [100, -200], opacity: [0, 1, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-      />
-
-      {/* Vertical animated line */}
-      <motion.div
-        className="absolute left-20 top-0 w-[1px] h-32 bg-gradient-to-b from-transparent via-skin to-transparent hidden lg:block"
-        animate={{ y: [-50, 100], opacity: [0, 0.5, 0] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute right-20 bottom-0 w-[1px] h-48 bg-gradient-to-t from-transparent via-skin to-transparent hidden lg:block"
-        animate={{ y: [50, -100], opacity: [0, 0.5, 0] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-      />
-
-      {/* Animated circles */}
-      <motion.div
-        className="absolute top-24 left-16 w-24 h-24 border border-skin/50 rounded-full hidden md:block"
-        animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-24 right-24 w-40 h-40 border border-skin/30 rounded-full hidden md:block"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.5, 0.2] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-      />
-
-      {/* Particle dots */}
-      {[...Array(8)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-2 h-2 bg-skin rounded-full hidden md:block"
-          style={{
-            left: `${15 + i * 10}%`,
-            top: `${20 + (i % 3) * 25}%`,
-          }}
-          animate={{
-            y: [0, -40, 0],
-            opacity: [0.2, 0.6, 0.2],
-            scale: [1, 1.5, 1],
-          }}
-          transition={{
-            duration: 3 + i * 0.5,
-            repeat: Infinity,
-            delay: i * 0.3,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-
-      <div className="container-narrow mx-auto px-6 md:px-12 lg:px-20 py-32 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Profile Photo with animated rings */}
-          <motion.div
-            className="mb-8"
-            initial={{ opacity: 0, scale: 0.5, y: 50 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-          >
-            <div className="relative inline-block">
-              {/* Outer pulsing rings */}
-              <motion.div
-                className="absolute inset-0 rounded-full border-2 border-skin/40"
-                style={{ scale: 1.5 }}
-                animate={{ scale: [1.5, 1.7, 1.5], opacity: [0.4, 0.1, 0.4] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-              />
-              <motion.div
-                className="absolute inset-0 rounded-full border border-skin/30"
-                style={{ scale: 1.8 }}
-                animate={{ scale: [1.8, 2, 1.8], opacity: [0.3, 0, 0.3] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-              />
-              <motion.div
-                className="absolute inset-0 rounded-full border border-skin/20"
-                style={{ scale: 2.1 }}
-                animate={{ scale: [2.1, 2.3, 2.1], opacity: [0.2, 0, 0.2] }}
-                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              />
-              
-              {/* Glowing backdrop */}
-              <motion.div
-                className="absolute inset-0 rounded-full bg-skin/50 blur-2xl -z-10"
-                style={{ scale: 1.3 }}
-                animate={{ opacity: [0.4, 0.7, 0.4], scale: [1.3, 1.5, 1.3] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              />
-
-              {/* Profile image */}
-              <motion.div
-                className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-skin shadow-large mx-auto relative"
-                whileHover={{ scale: 1.08 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <img
-                  src={profilePhoto}
-                  alt="Rishabh Raj Pandey - Professional Portrait"
-                  className="w-full h-full object-cover object-top scale-110"
-                />
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* Overline with typing effect simulation */}
-          <motion.div
-            className="overflow-hidden mb-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <motion.p
-              className="text-sm md:text-base uppercase tracking-[0.3em] text-muted-foreground"
-              initial={{ y: 30 }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              {t.hero.greeting}
-            </motion.p>
-          </motion.div>
-
-          {/* Main Title with staggered animation */}
-          <motion.div className="overflow-hidden mb-6">
-            <motion.h1
-              className="font-display text-4xl md:text-6xl lg:text-7xl font-semibold text-foreground leading-tight"
-              initial={{ y: 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-            >
-              {t.hero.title}
-            </motion.h1>
-          </motion.div>
-
-          {/* Animated underline */}
-          <motion.div
-            className="h-[2px] bg-gradient-to-r from-transparent via-skin to-transparent mx-auto mb-6"
-            initial={{ width: 0 }}
-            animate={{ width: "60%" }}
-            transition={{ duration: 1, delay: 1.2, ease: "easeOut" }}
-          />
-
-          {/* Subtitle */}
-          <motion.p
-            className="text-lg md:text-xl text-muted-foreground mb-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.9 }}
-          >
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }} className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
             {t.hero.subtitle}
           </motion.p>
-
-          {/* Quote with fade effect */}
-          <motion.p
-            className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-12 italic"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1.1 }}
-          >
-            <motion.span
-              animate={{ opacity: [0.7, 1, 0.7] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            >
-              „{t.hero.quote}"
-            </motion.span>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }} className="mt-3 max-w-xl border-l-2 border-accent/60 pl-4 text-sm italic text-foreground/70">
+            “{t.hero.quote}”
           </motion.p>
 
-          {/* CTA Buttons with stagger */}
-          <motion.div
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.3 }}
-          >
-            <motion.div 
-              whileHover={{ scale: 1.05, y: -3 }} 
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400 }}
-            >
-              <Button variant="hero" size="xl" asChild className="shadow-lg hover:shadow-xl transition-shadow">
-                <Link to="/portfolio">
-                  {t.hero.viewPortfolio}
-                </Link>
-              </Button>
-            </motion.div>
-            <motion.div 
-              whileHover={{ scale: 1.05, y: -3 }} 
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400 }}
-            >
-              <Button variant="hero-secondary" size="xl" asChild className="shadow-md hover:shadow-lg transition-shadow">
-                <a href="/Rishabh_Pandey_Lebenslauf.pdf" download className="flex items-center gap-2">
-                  <Download size={18} />
-                  {t.hero.downloadCV}
-                </a>
-              </Button>
-            </motion.div>
-            <motion.div 
-              whileHover={{ scale: 1.05, y: -3 }} 
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400 }}
-            >
-              <Button variant="hero-outline" size="xl" asChild className="hover:shadow-md transition-shadow">
-                <Link to="/contact" className="flex items-center gap-2">
-                  <Mail size={18} />
-                  {t.hero.contactMe}
-                </Link>
-              </Button>
-            </motion.div>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.45 }} className="mt-9 flex flex-wrap gap-3">
+            <button onClick={() => go("projects")} className="btn-primary">{t.hero.viewPortfolio}</button>
+            <a href={asset("Rishabh_Pandey_Lebenslauf.pdf")} download className="btn-ghost"><Download className="h-4 w-4" />{t.hero.downloadCV}</a>
+            <button onClick={() => go("contact")} className="btn-ghost"><Mail className="h-4 w-4" />{t.hero.contactMe}</button>
           </motion.div>
         </div>
 
-        {/* Scroll indicator with bounce */}
-        <motion.div
-          className="absolute bottom-12 left-1/2 -translate-x-1/2"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2, duration: 0.6 }}
-        >
-          <motion.div
-            className="flex flex-col items-center gap-2 text-muted-foreground cursor-pointer"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            whileHover={{ scale: 1.1 }}
-          >
-            <span className="text-xs uppercase tracking-widest">{t.hero.scrollDown}</span>
-            <motion.div
-              animate={{ y: [0, 5, 0] }}
-              transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <ArrowDown size={20} />
-            </motion.div>
-          </motion.div>
+        {/* Portrait sits in front of the 3D core rendered in the background canvas */}
+        <motion.div initial={{ opacity: 0, scale: 0.85, rotateY: -25 }} animate={{ opacity: 1, scale: 1, rotateY: 0 }} transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }} className="mx-auto w-full max-w-[300px] lg:max-w-[340px]" style={{ perspective: 1000 }}>
+          <TiltCard max={14} className="p-3">
+            <div className="relative overflow-hidden rounded-[1.25rem]">
+              <img src={profilePhoto} alt="Rishabh Raj Pandey" className="aspect-[4/5] w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-primary/10" />
+              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between rounded-2xl border border-white/10 bg-background/60 px-4 py-2.5 backdrop-blur-md">
+                <div>
+                  <p className="font-display text-sm font-semibold">Rishabh Raj Pandey</p>
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Schmalkalden · DE</p>
+                </div>
+                <span className="h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_12px_hsl(var(--primary))]" />
+              </div>
+            </div>
+          </TiltCard>
         </motion.div>
       </div>
+
+      <motion.button
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}
+        onClick={() => go("about")}
+        className="absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground"
+        aria-label={t.hero.scrollDown}
+      >
+        {ex.scroll}
+        <motion.span animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.6 }}><ArrowDown className="h-4 w-4 text-primary" /></motion.span>
+      </motion.button>
     </section>
   );
 };

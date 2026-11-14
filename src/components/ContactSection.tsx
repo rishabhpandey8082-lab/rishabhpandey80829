@@ -1,230 +1,88 @@
 import { useState } from "react";
-import { Mail, Phone, Linkedin, MapPin, Send, Loader2 } from "lucide-react";
-import { Button } from "./ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { AnimatedSection } from "./AnimatedSection";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { Linkedin, Loader2, Mail, MapPin, Phone, Send } from "lucide-react";
 import emailjs from "@emailjs/browser";
+import { toast } from "sonner";
 import { z } from "zod";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { EMAIL, LINKEDIN, PHONE } from "@/data/content";
+import { Reveal, SectionHeader, TiltCard } from "./fx";
 
-const contactSchema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(100),
-  email: z.string().trim().email("Invalid email").max(255),
-  message: z.string().trim().min(1, "Message is required").max(1000),
+const schema = z.object({
+  name: z.string().trim().min(1).max(100),
+  email: z.string().trim().email().max(255),
+  message: z.string().trim().min(1).max(1000),
 });
 
-const EMAILJS_SERVICE_ID = "service_twtuhws";
-const EMAILJS_TEMPLATE_ID = "template_j84c4jy";
-const EMAILJS_PUBLIC_KEY = "8jMjDhOZnSL7p-56t";
+// EmailJS public identifiers (client-side by design)
+const SERVICE_ID = "service_twtuhws";
+const TEMPLATE_ID = "template_j84c4jy";
+const PUBLIC_KEY = "8jMjDhOZnSL7p-56t";
+
+const inputCls = "w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5 text-sm text-foreground outline-none transition placeholder:text-muted-foreground/60 focus:border-primary/60 focus:bg-white/[0.07] focus:ring-4 focus:ring-primary/10";
 
 export const ContactSection = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: ""
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
   const { t } = useLanguage();
+  const c = t.contact;
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const validation = contactSchema.safeParse(formData);
-    if (!validation.success) {
-      toast({
-        title: t.contact.toast.errorTitle,
-        description: t.contact.toast.errorValidation,
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsLoading(true);
-
+    if (!schema.safeParse(form).success) { toast.error(c.toast.errorTitle, { description: c.toast.errorValidation }); return; }
+    setLoading(true);
     try {
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          message: formData.message,
-          to_name: "Rishabh",
-        },
-        EMAILJS_PUBLIC_KEY
-      );
-
-      toast({
-        title: t.contact.toast.title,
-        description: t.contact.toast.description,
-      });
-      setFormData({ name: "", email: "", message: "" });
-    } catch (error) {
-      toast({
-        title: t.contact.toast.errorTitle,
-        description: t.contact.toast.errorDescription,
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, { from_name: form.name, from_email: form.email, message: form.message, to_name: "Rishabh" }, PUBLIC_KEY);
+      toast.success(c.toast.title, { description: c.toast.description });
+      setForm({ name: "", email: "", message: "" });
+    } catch {
+      toast.error(c.toast.errorTitle, { description: c.toast.errorDescription });
+    } finally { setLoading(false); }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  const info = [
+    { icon: Mail, label: c.info.email, value: EMAIL, href: `mailto:${EMAIL}` },
+    { icon: Phone, label: c.info.phone, value: PHONE, href: `tel:${PHONE.replace(/\s/g, "")}` },
+    { icon: Linkedin, label: c.info.linkedin, value: "Rishabh Raj Pandey", href: LINKEDIN },
+    { icon: MapPin, label: c.info.location, value: c.info.locationValue },
+  ];
 
   return (
-    <section id="contact" className="bg-skin section-padding">
+    <section id="contact" className="section-padding relative">
       <div className="container-narrow mx-auto">
-        {/* Section Header */}
-        <AnimatedSection className="text-center mb-16">
-          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-4">
-            {t.contact.title}
-          </p>
-          <h2 className="font-display text-3xl md:text-5xl font-semibold text-foreground">
-            {t.contact.subtitle}
-          </h2>
-        </AnimatedSection>
-
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* Contact Info */}
-          <AnimatedSection delay={0.1} animation="slide-left" className="space-y-8">
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-foreground rounded-lg">
-                <Mail className="w-5 h-5 text-background" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-foreground mb-1">{t.contact.info.email}</h4>
-              <a 
-                  href="mailto:rishabhpandey80829@gmail.com" 
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  rishabhpandey80829@gmail.com
-                </a>
-              </div>
+        <SectionHeader eyebrow={c.title} title={c.subtitle} />
+        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <Reveal>
+            <p className="mb-6 text-lg text-muted-foreground">{c.description}</p>
+            <div className="space-y-3">
+              {info.map(({ icon: Icon, label, value, href }) => {
+                const body = (
+                  <TiltCard className="flex items-center gap-4 p-4" max={5}>
+                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-primary/15 text-primary"><Icon className="h-5 w-5" /></span>
+                    <div className="min-w-0">
+                      <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
+                      <p className="truncate text-sm font-medium">{value}</p>
+                    </div>
+                  </TiltCard>
+                );
+                return href ? <a key={label} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className="block">{body}</a> : <div key={label}>{body}</div>;
+              })}
             </div>
+          </Reveal>
 
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-foreground rounded-lg">
-                <Phone className="w-5 h-5 text-background" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-foreground mb-1">{t.contact.info.phone}</h4>
-                <a 
-                  href="tel:+491727711065" 
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  +49 172 7711065
-                </a>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-foreground rounded-lg">
-                <Linkedin className="w-5 h-5 text-background" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-foreground mb-1">{t.contact.info.linkedin}</h4>
-                <a 
-                  href="https://www.linkedin.com/in/rishabh-raj-pandey-3b683b324" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Rishabh Raj Pandey
-                </a>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-foreground rounded-lg">
-                <MapPin className="w-5 h-5 text-background" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-foreground mb-1">{t.contact.info.location}</h4>
-                <p className="text-muted-foreground">
-                  Deutschland
-                </p>
-              </div>
-            </div>
-          </AnimatedSection>
-
-          {/* Contact Form */}
-          <AnimatedSection delay={0.2} animation="slide-right">
-            <div className="bg-card rounded-xl p-8 shadow-medium">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                    {t.contact.form.name}
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    disabled={isLoading}
-                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all disabled:opacity-50"
-                    placeholder={t.contact.form.namePlaceholder}
-                  />
+          <Reveal delay={0.1}>
+            <TiltCard className="p-7 md:p-9" max={3}>
+              <form onSubmit={submit} className="space-y-4">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <label className="block"><span className="mb-2 block text-xs text-muted-foreground">{c.form.name}</span><input className={inputCls} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={c.form.namePlaceholder} maxLength={100} /></label>
+                  <label className="block"><span className="mb-2 block text-xs text-muted-foreground">{c.form.email}</span><input type="email" className={inputCls} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder={c.form.emailPlaceholder} maxLength={255} /></label>
                 </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                    {t.contact.form.email}
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    disabled={isLoading}
-                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all disabled:opacity-50"
-                    placeholder={t.contact.form.emailPlaceholder}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-                    {t.contact.form.message}
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    disabled={isLoading}
-                    rows={5}
-                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all resize-none disabled:opacity-50"
-                    placeholder={t.contact.form.messagePlaceholder}
-                  />
-                </div>
-
-                <Button type="submit" variant="hero" size="lg" className="w-full" disabled={isLoading}>
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      {t.contact.form.sending}
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 mr-2" />
-                      {t.contact.form.send}
-                    </>
-                  )}
-                </Button>
+                <label className="block"><span className="mb-2 block text-xs text-muted-foreground">{c.form.message}</span><textarea rows={6} className={`${inputCls} resize-none`} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder={c.form.messagePlaceholder} maxLength={1000} /></label>
+                <button type="submit" disabled={loading} className="btn-primary w-full disabled:opacity-60">
+                  {loading ? <><Loader2 className="h-4 w-4 animate-spin" />{c.form.sending}</> : <><Send className="h-4 w-4" />{c.form.send}</>}
+                </button>
               </form>
-            </div>
-          </AnimatedSection>
+            </TiltCard>
+          </Reveal>
         </div>
       </div>
     </section>

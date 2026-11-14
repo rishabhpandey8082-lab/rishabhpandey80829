@@ -14,8 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['Playfair Display', 'serif'],
-        body: ['Inter', 'sans-serif'],
+        display: ['Sora', 'system-ui', 'sans-serif'],
+        body: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -79,6 +80,8 @@ export default {
         'glow': '0 0 30px rgba(245, 230, 211, 0.5)',
       },
       keyframes: {
+        marquee: { from: { transform: "translateX(0)" }, to: { transform: "translateX(-50%)" } },
+        "spin-slow": { to: { transform: "rotate(360deg)" } },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -89,6 +92,8 @@ export default {
         },
       },
       animation: {
+        marquee: "marquee 40s linear infinite",
+        "spin-slow": "spin-slow 18s linear infinite",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },

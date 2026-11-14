@@ -1,114 +1,46 @@
-import { Brain, Wrench, Database, Palette } from "lucide-react";
-import { AnimatedSection } from "./AnimatedSection";
+import { useMemo } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { extra } from "@/data/content";
+import { Reveal, SectionHeader, TiltCard } from "./fx";
+import { SkillSphere } from "./SkillSphere";
 
 export const SkillsSection = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const s = t.skills;
+  const groups = [s.financeTools, s.erpSystems, s.otherTools, s.softSkills];
+  const cloud = useMemo(
+    () => Array.from(new Set([...s.financeTools.items, ...s.erpSystems.items, ...s.otherTools.items, ...s.softSkills.items.slice(0, 4)])),
+    [s],
+  );
+  const marquee = [...cloud, ...cloud];
 
   return (
-    <section id="skills" className="bg-background section-padding">
+    <section id="skills" className="section-padding relative overflow-hidden">
       <div className="container-narrow mx-auto">
-        {/* Section Header */}
-        <AnimatedSection className="text-center mb-16">
-          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-4">
-            {t.skills.softSkills.title}
-          </p>
-          <h2 className="font-display text-3xl md:text-5xl font-semibold text-foreground">
-            {t.skills.title}
-          </h2>
-        </AnimatedSection>
+        <SectionHeader eyebrow={extra[language].skillsEyebrow} title={s.title} />
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Soft Skills */}
-          <AnimatedSection delay={0.1} animation="slide-left" className="bg-muted rounded-xl p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-foreground rounded-lg">
-                <Brain className="w-5 h-5 text-background" />
-              </div>
-              <h3 className="font-display text-xl font-semibold text-foreground">
-                {t.skills.softSkills.title}
-              </h3>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              {t.skills.softSkills.items.map((skill, index) => (
-                <span
-                  key={index}
-                  className="px-4 py-2 bg-card text-foreground rounded-full text-sm font-medium shadow-soft hover:shadow-medium transition-shadow"
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </AnimatedSection>
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <Reveal>
+            <SkillSphere items={cloud} />
+            <p className="mt-2 text-center font-mono text-[11px] uppercase tracking-widest text-muted-foreground">{extra[language].skillsHint}</p>
+          </Reveal>
 
-          {/* Finance Tools */}
-          <AnimatedSection delay={0.2} animation="slide-right" className="bg-skin rounded-xl p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-foreground rounded-lg">
-                <Wrench className="w-5 h-5 text-background" />
-              </div>
-              <h3 className="font-display text-xl font-semibold text-foreground">
-                {t.skills.financeTools.title}
-              </h3>
-            </div>
-            <ul className="space-y-3">
-              {t.skills.financeTools.items.map((tool, index) => (
-                <li
-                  key={index}
-                  className="flex items-center gap-3 text-muted-foreground"
-                >
-                  <span className="w-2 h-2 bg-foreground rounded-full" />
-                  {tool}
-                </li>
-              ))}
-            </ul>
-          </AnimatedSection>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {groups.map((g, i) => (
+              <Reveal key={g.title} delay={i * 0.08}>
+                <TiltCard className="h-full p-6">
+                  <h3 className="mb-4 font-display text-base font-semibold text-primary">{g.title}</h3>
+                  <div className="flex flex-wrap gap-2">{g.items.map((it) => <span key={it} className="chip">{it}</span>)}</div>
+                </TiltCard>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </div>
 
-          {/* ERP Systems */}
-          <AnimatedSection delay={0.3} animation="slide-left" className="bg-skin rounded-xl p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-foreground rounded-lg">
-                <Database className="w-5 h-5 text-background" />
-              </div>
-              <h3 className="font-display text-xl font-semibold text-foreground">
-                {t.skills.erpSystems.title}
-              </h3>
-            </div>
-            <ul className="space-y-3">
-              {t.skills.erpSystems.items.map((system, index) => (
-                <li
-                  key={index}
-                  className="flex items-center gap-3 text-muted-foreground"
-                >
-                  <span className="w-2 h-2 bg-foreground rounded-full" />
-                  {system}
-                </li>
-              ))}
-            </ul>
-          </AnimatedSection>
-
-          {/* Other Tools */}
-          <AnimatedSection delay={0.4} animation="slide-right" className="bg-muted rounded-xl p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-foreground rounded-lg">
-                <Palette className="w-5 h-5 text-background" />
-              </div>
-              <h3 className="font-display text-xl font-semibold text-foreground">
-                {t.skills.otherTools.title}
-              </h3>
-            </div>
-            <ul className="space-y-3">
-              {t.skills.otherTools.items.map((tool, index) => (
-                <li
-                  key={index}
-                  className="flex items-center gap-3 text-muted-foreground"
-                >
-                  <span className="w-2 h-2 bg-foreground rounded-full" />
-                  {tool}
-                </li>
-              ))}
-            </ul>
-          </AnimatedSection>
+      <div className="relative mt-20 border-y border-white/5 py-5 [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]">
+        <div className="flex w-max animate-marquee gap-10 font-display text-2xl font-semibold text-foreground/20 md:text-4xl">
+          {marquee.map((m, i) => <span key={i} className="whitespace-nowrap">{m} <span className="text-primary/40">✦</span></span>)}
         </div>
       </div>
     </section>

@@ -1,60 +1,24 @@
-import { forwardRef } from "react";
-import { Linkedin, Mail, ArrowUp } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowUp, Linkedin, Mail } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { EMAIL, LINKEDIN, extra } from "@/data/content";
 
-export const Footer = forwardRef<HTMLElement>((_, ref) => {
-  const { t } = useLanguage();
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
+export const Footer = () => {
+  const { t, language } = useLanguage();
+  const btn = "grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/5 transition hover:border-primary/50 hover:bg-primary/10 hover:text-primary";
   return (
-    <footer ref={ref} className="bg-foreground py-12 px-6 md:px-12 lg:px-20">
-      <div className="container-narrow mx-auto">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="text-center md:text-left">
-            <Link to="/" className="font-display text-xl font-semibold text-background mb-2 block hover:text-background/80 transition-colors">
-              Rishabh Raj Pandey
-            </Link>
-            <p className="text-background/60 text-sm">
-              {t.footer.title}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <a
-              href="mailto:rishabhpandey80829@gmail.com"
-              className="p-3 bg-background/10 rounded-full text-background hover:bg-background/20 transition-colors"
-            >
-              <Mail className="w-5 h-5" />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/rishabh-raj-pandey-3b683b324"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 bg-background/10 rounded-full text-background hover:bg-background/20 transition-colors"
-            >
-              <Linkedin className="w-5 h-5" />
-            </a>
-            <button
-              onClick={scrollToTop}
-              className="p-3 bg-background/10 rounded-full text-background hover:bg-background/20 transition-colors"
-            >
-              <ArrowUp className="w-5 h-5" />
-            </button>
-          </div>
+    <footer className="relative border-t border-white/5 bg-background/60 px-5 py-12 backdrop-blur-xl md:px-8">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 md:flex-row">
+        <div className="text-center md:text-left">
+          <p className="font-display text-xl font-semibold"><span className="text-gradient">Rishabh Raj Pandey</span></p>
+          <p className="mt-1 text-sm text-muted-foreground">{t.footer.title}</p>
         </div>
-
-        <div className="border-t border-background/10 mt-8 pt-8 text-center">
-          <p className="text-background/60 text-sm">
-            © {new Date().getFullYear()} Rishabh Raj Pandey. {t.footer.rights}
-          </p>
+        <div className="flex items-center gap-3">
+          <a href={`mailto:${EMAIL}`} className={btn} aria-label="Email"><Mail className="h-5 w-5" /></a>
+          <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" className={btn} aria-label="LinkedIn"><Linkedin className="h-5 w-5" /></a>
+          <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className={btn} aria-label="Top"><ArrowUp className="h-5 w-5" /></button>
         </div>
       </div>
+      <p className="mt-8 text-center text-xs text-muted-foreground">© {new Date().getFullYear()} Rishabh Raj Pandey. {t.footer.rights} · {extra[language].madeWith}</p>
     </footer>
   );
-});
-
-Footer.displayName = "Footer";
+};

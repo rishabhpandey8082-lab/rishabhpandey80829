@@ -1,50 +1,26 @@
-import { useMemo } from "react";
-import { motion, useScroll, useSpring, useTransform, useVelocity } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { extra } from "@/data/content";
-import { Reveal, SectionHeader, TiltCard } from "./fx";
-import { SkillSphere } from "./SkillSphere";
+import { ui } from "@/data/content";
+import { Reveal, SectionHead } from "./fx";
 
 export const SkillsSection = () => {
   const { t, language } = useLanguage();
   const s = t.skills;
   const groups = [s.financeTools, s.erpSystems, s.otherTools, s.softSkills];
-  const cloud = useMemo(
-    () => Array.from(new Set([...s.financeTools.items, ...s.erpSystems.items, ...s.otherTools.items, ...s.softSkills.items.slice(0, 4)])),
-    [s],
-  );
-  const marquee = [...cloud, ...cloud];
-  const { scrollY } = useScroll();
-  const skew = useSpring(useTransform(useVelocity(scrollY), [-2500, 2500], [-14, 14], { clamp: true }), { stiffness: 180, damping: 28 });
 
   return (
-    <section id="skills" className="section-padding relative overflow-hidden">
-      <div className="container-narrow mx-auto">
-        <SectionHeader eyebrow={extra[language].skillsEyebrow} title={s.title} />
-
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-          <Reveal>
-            <SkillSphere items={cloud} />
-            <p className="mt-2 text-center font-mono text-[11px] uppercase tracking-widest text-muted-foreground">{extra[language].skillsHint}</p>
-          </Reveal>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            {groups.map((g, i) => (
-              <Reveal key={g.title} delay={i * 0.08}>
-                <TiltCard className="h-full p-6">
-                  <h3 className="mb-4 font-display text-base font-semibold text-primary">{g.title}</h3>
-                  <div className="flex flex-wrap gap-2">{g.items.map((it) => <span key={it} className="chip">{it}</span>)}</div>
-                </TiltCard>
-              </Reveal>
-            ))}
-          </div>
+    <section id="skills" className="section">
+      <div className="wrap">
+        <SectionHead eyebrow={ui[language].skillsEyebrow} title={s.title} />
+        <div className="grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+          {groups.map((g, i) => (
+            <Reveal key={g.title} delay={i * 0.05}>
+              <h3 className="mb-4 border-b border-border pb-3 text-sm font-semibold">{g.title}</h3>
+              <ul className="space-y-2.5">
+                {g.items.map((it) => <li key={it} className="text-sm text-foreground/80">{it}</li>)}
+              </ul>
+            </Reveal>
+          ))}
         </div>
-      </div>
-
-      <div className="relative mt-20 border-y border-white/5 py-5 [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]">
-        <motion.div style={{ skewX: skew }}><div className="flex w-max animate-marquee gap-10 font-display text-2xl font-semibold text-foreground/25 md:text-4xl">
-          {marquee.map((m, i) => <span key={i} className="whitespace-nowrap">{m} <span className="text-primary/50">✦</span></span>)}
-        </div></motion.div>
       </div>
     </section>
   );

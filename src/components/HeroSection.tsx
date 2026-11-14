@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Download, Mail } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { extra } from "@/data/content";
 import { asset } from "@/lib/assets";
+import { scrollToId } from "@/lib/scroll";
 import profilePhoto from "@/assets/profile-photo.jpg";
-import { TiltCard } from "./fx";
+import { Magnetic, TiltCard } from "./fx";
 
 const NameLine = ({ text, delay = 0, gradient = false }: { text: string; delay?: number; gradient?: boolean }) => (
   <span className="block overflow-hidden pb-2" aria-label={text}>
@@ -29,18 +30,22 @@ export const HeroSection = () => {
   const { t, language } = useLanguage();
   const ex = extra[language];
   const [role, setRole] = useState(0);
+  const { scrollY } = useScroll();
+  const py = useTransform(scrollY, [0, 700], [0, -140]);
+  const pop = useTransform(scrollY, [0, 520], [1, 0]);
+  const pscale = useTransform(scrollY, [0, 700], [1, 0.92]);
 
   useEffect(() => {
     const id = setInterval(() => setRole((r) => (r + 1) % ex.roles.length), 2600);
     return () => clearInterval(id);
   }, [ex.roles.length]);
 
-  const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const go = scrollToId;
 
   return (
     <section id="home" className="relative flex min-h-screen items-center px-5 pb-20 pt-32 md:px-8">
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/80 via-background/35 to-transparent" />
-      <div className="mx-auto grid w-full max-w-6xl items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+      <motion.div style={{ y: py, opacity: pop, scale: pscale }} className="mx-auto grid w-full max-w-6xl items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
         <div>
           <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="eyebrow mb-6 flex items-center gap-3">
             <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-70" /><span className="relative inline-flex h-2 w-2 rounded-full bg-primary" /></span>
@@ -70,9 +75,9 @@ export const HeroSection = () => {
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.45 }} className="mt-9 flex flex-wrap gap-3">
-            <button onClick={() => go("projects")} className="btn-primary">{t.hero.viewPortfolio}</button>
-            <a href={asset("Rishabh_Pandey_Lebenslauf.pdf")} download className="btn-ghost"><Download className="h-4 w-4" />{t.hero.downloadCV}</a>
-            <button onClick={() => go("contact")} className="btn-ghost"><Mail className="h-4 w-4" />{t.hero.contactMe}</button>
+            <Magnetic><button onClick={() => go("projects")} className="btn-primary">{t.hero.viewPortfolio}</button></Magnetic>
+            <Magnetic><a href={asset("Rishabh_Pandey_Lebenslauf.pdf")} download className="btn-ghost"><Download className="h-4 w-4" />{t.hero.downloadCV}</a></Magnetic>
+            <Magnetic><button onClick={() => go("contact")} className="btn-ghost"><Mail className="h-4 w-4" />{t.hero.contactMe}</button></Magnetic>
           </motion.div>
         </div>
 
@@ -92,7 +97,7 @@ export const HeroSection = () => {
             </div>
           </TiltCard>
         </motion.div>
-      </div>
+      </motion.div>
 
       <motion.button
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}

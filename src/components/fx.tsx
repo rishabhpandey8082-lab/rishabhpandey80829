@@ -97,8 +97,45 @@ export const Cursor = () => {
 
 
 export const SectionHeader = ({ eyebrow, title, className }: { eyebrow: string; title: string; className?: string }) => (
-  <Reveal className={cn("mb-14 md:mb-20", className)}>
-    <p className="eyebrow mb-4 flex items-center gap-3"><span className="h-px w-10 bg-primary/70" />{eyebrow}</p>
-    <h2 className="section-title max-w-3xl">{title}</h2>
-  </Reveal>
+  <div className={cn("mb-14 md:mb-20", className)}>
+    <Reveal><p className="eyebrow mb-4 flex items-center gap-3"><span className="h-px w-10 bg-primary/70" />{eyebrow}</p></Reveal>
+    <h2 className="section-title max-w-3xl" aria-label={title}>
+      {title.split(" ").map((w, i) => (
+        <span key={i} aria-hidden className="mr-[0.25em] inline-block overflow-hidden pb-[0.14em] align-bottom">
+          <motion.span
+            className="inline-block"
+            initial={{ y: "115%", rotate: 7 }}
+            whileInView={{ y: 0, rotate: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.9, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+            style={{ transformOrigin: "left bottom" }}
+          >
+            {w}
+          </motion.span>
+        </span>
+      ))}
+    </h2>
+  </div>
 );
+
+/** Wrapper whose child is gently pulled toward the pointer. */
+export const Magnetic = ({ children, strength = 0.35, className }: { children: ReactNode; strength?: number; className?: string }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useSpring(useMotionValue(0), { stiffness: 250, damping: 16, mass: 0.4 });
+  const y = useSpring(useMotionValue(0), { stiffness: 250, damping: 16, mass: 0.4 });
+  return (
+    <motion.div
+      ref={ref}
+      style={{ x, y }}
+      className={cn("inline-block", className)}
+      onPointerMove={(e) => {
+        const r = ref.current!.getBoundingClientRect();
+        x.set((e.clientX - (r.left + r.width / 2)) * strength);
+        y.set((e.clientY - (r.top + r.height / 2)) * strength);
+      }}
+      onPointerLeave={() => { x.set(0); y.set(0); }}
+    >
+      {children}
+    </motion.div>
+  );
+};

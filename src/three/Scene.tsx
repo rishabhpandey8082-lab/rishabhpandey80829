@@ -1,10 +1,11 @@
-import { Component, ReactNode, useMemo, useRef } from "react";
+import { Component, ReactNode, useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { MeshDistortMaterial } from "@react-three/drei";
+import { Bloom, ChromaticAberration, EffectComposer, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
-import { MotionValue, useScroll } from "framer-motion";
+import { coreShape, galaxyShape, helixShape, knotShape, randoms, skylineShape, textShape } from "./shapes";
 
 const reduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fine = typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 const mouse = { x: 0, y: 0 };
 if (typeof window !== "undefined") {
   window.addEventListener("pointermove", (e) => {
@@ -12,221 +13,173 @@ if (typeof window !== "undefined") {
     mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
   });
 }
-
 const damp = THREE.MathUtils.damp;
-const lerp = THREE.MathUtils.lerp;
+const smooth = THREE.MathUtils.smoothstep;
 const speed = reduced ? 0.15 : 1;
 
-/* ---------- Market surface: a living 3D bar chart ---------- */
-const GRID = 16;
-const SPACING = 0.62;
-const LOW = new THREE.Color("#0b6e7f");
-const MID = new THREE.Color("#10e3a0");
-const HIGH = new THREE.Color("#ffc94a");
+/** page section → particle shape index (0 core · 1 skyline · 2 knot · 3 galaxy · 4 helix · 5 text) */
+const SECTIONS = ["home", "about", "skills", "projects", "cases", "certs", "contact"];
+const SHAPE_OF = [0, 1, 2, 3, 3, 4, 5];
+const OFFSET_X = [0.22, -0.24, 0.24, 0, 0, 0.26, 0]; // fraction of viewport width, per shape index of SHAPE_OF
+const OFFSET_Y = [0, 0, 0, 0, 0, 0, 2.5];
+const SCALE = [1, 0.95, 1.05, 1.0, 1.0, 0.9, 1];
+const OPACITY = [1, 0.7, 0.75, 0.38, 0.38, 0.7, 1];
 
-function MarketSurface({ scroll }: { scroll: MotionValue<number> }) {
-  const mesh = useRef<THREE.InstancedMesh>(null!);
-  const group = useRef<THREE.Group>(null!);
-  const dummy = useMemo(() => new THREE.Object3D(), []);
-  const color = useMemo(() => new THREE.Color(), []);
-  const amp = useRef(1);
-
-  useFrame((state, dt) => {
-    const t = state.clock.elapsedTime * speed;
-    const p = scroll.get();
-    amp.current = damp(amp.current, p < 0.12 ? 1 : 0.7, 2, dt);
-    let i = 0;
-    const half = (GRID - 1) / 2;
-    for (let x = 0; x < GRID; x++) {
-      for (let z = 0; z < GRID; z++) {
-        const px = (x - half) * SPACING;
-        const pz = (z - half) * SPACING;
-        const d = Math.hypot(px, pz);
-        const wave =
-          Math.sin(px * 0.8 + t * 0.9) * 0.5 +
-          Math.cos(pz * 0.7 + t * 0.7) * 0.5 +
-          Math.sin(d * 1.1 - t * 1.6) * 0.6;
-        const h = Math.max(0.08, (1.1 + wave) * 0.55 * amp.current);
-        dummy.position.set(px, h / 2, pz);
-        dummy.scale.set(0.46, h, 0.46);
-        dummy.updateMatrix();
-        mesh.current.setMatrixAt(i, dummy.matrix);
-        const k = Math.min(1, h / 2.1);
-        if (k < 0.5) color.copy(LOW).lerp(MID, k * 2);
-        else color.copy(MID).lerp(HIGH, (k - 0.5) * 2);
-        mesh.current.setColorAt(i, color);
-        i++;
-      }
-    }
-    mesh.current.instanceMatrix.needsUpdate = true;
-    if (mesh.current.instanceColor) mesh.current.instanceColor.needsUpdate = true;
-
-    group.current.rotation.y = t * 0.06 + mouse.x * 0.25 + p * 3.2;
-    group.current.rotation.x = damp(group.current.rotation.x, mouse.y * 0.06, 3, dt);
-    group.current.position.y = lerp(-3.5, -4.1, Math.min(1, p * 4));
-  });
-
-  return (
-    <group ref={group} position={[0, -3.5, -4.5]}>
-      <instancedMesh ref={mesh} args={[undefined, undefined, GRID * GRID]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial metalness={0.35} roughness={0.3} transparent opacity={0.92} />
-      </instancedMesh>
-    </group>
-  );
+/** Continuous "which shape are we on" value from the real DOM positions of the sections. */
+function sectionState(out: { seg: number; ox: number; oy: number; sc: number; op: number }) {
+  const y = window.innerHeight * 0.5;
+  const tops = SECTIONS.map((id) => document.getElementById(id)?.getBoundingClientRect().top ?? 1e9);
+  let i = 0;
+  for (let k = 0; k < tops.length; k++) if (tops[k] <= y) i = k;
+  const next = Math.min(i + 1, SECTIONS.length - 1);
+  const span = tops[next] - tops[i] || 1;
+  const u = i === next ? 0 : Math.min(1, Math.max(0, (y - tops[i]) / span));
+  const t = i === next ? 0 : smooth(u, 0.45, 1);
+  const L = (a: number[]) => a[i] + (a[next] - a[i]) * t;
+  out.seg = SHAPE_OF[i] + (SHAPE_OF[next] - SHAPE_OF[i]) * t;
+  out.ox = L(OFFSET_X); out.oy = L(OFFSET_Y); out.sc = L(SCALE); out.op = L(OPACITY);
 }
 
-/* ---------- Hero centerpiece: distorted core, wire shell, orbiting rings & coins ---------- */
-function Core({ scroll }: { scroll: MotionValue<number> }) {
-  const root = useRef<THREE.Group>(null!);
-  const inner = useRef<THREE.Mesh>(null!);
-  const shell = useRef<THREE.Mesh>(null!);
-  const rings = useRef<THREE.Group>(null!);
-  const coins = useRef<THREE.Group>(null!);
-  const { viewport, size } = useThree();
-  const desktop = size.width >= 900;
+const vert = /* glsl */ `
+  attribute vec3 aP0; attribute vec3 aP1; attribute vec3 aP2; attribute vec3 aP3; attribute vec3 aP4; attribute vec3 aP5;
+  attribute vec4 aRand;
+  uniform float uTime; uniform float uSeg; uniform float uPix; uniform vec3 uMouse; uniform float uMouseOn;
+  varying vec3 vCol; varying float vGlow;
 
-  useFrame((state, dt) => {
-    const t = state.clock.elapsedTime * speed;
-    const p = scroll.get();
-    const away = Math.min(1, Math.max(0, (p - 0.04) / 0.1)); // 0 in hero → 1 after hero
-    const baseX = desktop ? viewport.width * 0.2 : 0;
-    const baseY = desktop ? 0.15 : 1.9;
-    const tx = lerp(baseX, desktop ? -viewport.width * 0.34 : 0, away);
-    const ty = lerp(baseY, desktop ? 0.4 + Math.sin(p * 18) * 0.5 : 2.4, away);
-    const ts = lerp(desktop ? 1 : 0.72, desktop ? 0.5 : 0.4, away);
-    root.current.position.x = damp(root.current.position.x, tx + mouse.x * 0.35, 3, dt);
-    root.current.position.y = damp(root.current.position.y, ty - mouse.y * 0.25, 3, dt);
-    root.current.scale.setScalar(damp(root.current.scale.x, ts, 3, dt));
-    root.current.rotation.y = t * 0.2 + p * 8;
+  vec3 pick(float i){
+    if(i<0.5) return aP0; if(i<1.5) return aP1; if(i<2.5) return aP2;
+    if(i<3.5) return aP3; if(i<4.5) return aP4; return aP5;
+  }
+  vec3 flow(vec3 p,float t){
+    return vec3(sin(p.y*1.3+t)+sin(p.z*0.7-t*0.8), sin(p.z*1.1+t*0.9)+sin(p.x*0.8+t*0.5), sin(p.x*1.2-t*0.7)+sin(p.y*0.9+t*0.6));
+  }
+  void main(){
+    float i0 = clamp(floor(uSeg), 0.0, 5.0);
+    float i1 = min(i0+1.0, 5.0);
+    float f = clamp(uSeg - i0, 0.0, 1.0);
+    float st = aRand.x*0.4;
+    float ff = smoothstep(st, st+0.6, f);
+    vec3 pos = mix(pick(i0), pick(i1), ff);
+    float mid = sin(ff*3.14159);
+    pos += flow(pos*0.55 + aRand.yzw*6.0, uTime*0.45) * (0.05 + 1.6*mid*aRand.y);
+    pos += normalize(pos+vec3(1e-3)) * sin(uTime*0.9 + aRand.z*6.2831) * 0.035;
 
-    inner.current.rotation.x = t * 0.35;
-    inner.current.rotation.z = t * 0.2;
-    shell.current.rotation.x = -t * 0.25;
-    shell.current.rotation.y = t * 0.3;
-    rings.current.children.forEach((r, i) => {
-      r.rotation.x = t * (0.4 + i * 0.18) + i * 1.2;
-      r.rotation.y = t * (0.25 - i * 0.12) + i * 0.7;
+    vec4 world = modelMatrix * vec4(pos,1.0);
+    vec3 d = world.xyz - uMouse;
+    float dist = length(d.xy);
+    float push = uMouseOn * exp(-dist*dist*0.45) * 1.4;
+    world.xyz += normalize(vec3(d.xy, 0.4)) * push;
+
+    vec4 mv = viewMatrix * world;
+    gl_Position = projectionMatrix * mv;
+    gl_PointSize = (aRand.w*1.7 + 0.7) * uPix * (1.0 + mid*0.7 + push*0.5) * (8.5 / -mv.z);
+
+    vec3 emerald = vec3(0.06,0.95,0.65);
+    vec3 cyan = vec3(0.2,0.75,1.0);
+    vec3 gold = vec3(1.0,0.78,0.25);
+    vec3 c = mix(emerald, cyan, aRand.y);
+    c = mix(c, gold, step(0.86, aRand.z));
+    vCol = c;
+    vGlow = 0.55 + aRand.w*0.6 + mid*0.5 + push*0.4;
+  }
+`;
+const frag = /* glsl */ `
+  uniform float uOpacity; varying vec3 vCol; varying float vGlow;
+  void main(){
+    float d = length(gl_PointCoord - 0.5);
+    float a = smoothstep(0.5, 0.0, d); a *= a;
+    gl_FragColor = vec4(vCol * vGlow, a * uOpacity);
+  }
+`;
+
+function Particles() {
+  const { size, camera } = useThree();
+  const mobile = size.width < 768;
+  const N = mobile ? 15000 : 42000;
+  const mesh = useRef<THREE.Points>(null!);
+  const state = useRef({ seg: 0, ox: 0.22, oy: 0, sc: 1, op: 1 });
+  const mpos = useMemo(() => new THREE.Vector3(), []);
+  const ray = useMemo(() => new THREE.Vector3(), []);
+
+  const { geo, mat } = useMemo(() => {
+    const g = new THREE.BufferGeometry();
+    const shapes = [coreShape(N), skylineShape(N), knotShape(N), galaxyShape(N), helixShape(N), coreShape(N)];
+    g.setAttribute("position", new THREE.BufferAttribute(shapes[0], 3));
+    shapes.forEach((s, i) => g.setAttribute(`aP${i}`, new THREE.BufferAttribute(s, 3)));
+    g.setAttribute("aRand", new THREE.BufferAttribute(randoms(N), 4));
+    const m = new THREE.ShaderMaterial({
+      vertexShader: vert, fragmentShader: frag, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      uniforms: { uTime: { value: 0 }, uSeg: { value: 0 }, uPix: { value: 1 }, uMouse: { value: new THREE.Vector3(99, 99, 0) }, uMouseOn: { value: 0 }, uOpacity: { value: 1 } },
     });
-    coins.current.rotation.y = t * 0.55;
-    coins.current.rotation.z = Math.sin(t * 0.3) * 0.25;
-    coins.current.children.forEach((c, i) => {
-      c.rotation.x = t * 1.6 + i;
-      c.position.y = Math.sin(t * 1.2 + i * 1.7) * 0.35;
+    return { geo: g, mat: m };
+  }, [N]);
+
+  // Contact shape is text → build once fonts are ready (needs the display font).
+  useEffect(() => {
+    let alive = true;
+    (document.fonts?.load("800 100px Sora") ?? Promise.resolve()).catch(() => null).then(() => {
+      if (!alive) return;
+      const arr = textShape(N, "LET'S TALK", mobile ? 6.4 : 10);
+      (geo.getAttribute("aP5") as THREE.BufferAttribute).set(arr);
+      (geo.getAttribute("aP5") as THREE.BufferAttribute).needsUpdate = true;
     });
+    return () => { alive = false; };
+  }, [geo, N, mobile]);
+
+  useFrame((s, dt) => {
+    const u = mat.uniforms;
+    const st = state.current;
+    const target = { seg: 0, ox: 0, oy: 0, sc: 1, op: 1 };
+    sectionState(target);
+    st.seg = damp(st.seg, target.seg, 5, dt);
+    st.ox = damp(st.ox, target.ox, 3, dt);
+    st.sc = damp(st.sc, target.sc, 3, dt);
+    st.oy = damp(st.oy, target.oy, 3, dt);
+    st.op = damp(st.op, target.op, 3, dt);
+
+    u.uTime.value = s.clock.elapsedTime * speed;
+    u.uSeg.value = st.seg;
+    u.uPix.value = s.gl.getPixelRatio();
+    u.uOpacity.value = st.op * (mobile ? 0.55 : 1);
+
+    const wx = mobile ? 0 : st.ox * (s.viewport.width + 6);
+    mesh.current.position.x = wx;
+    mesh.current.position.y = (mobile ? 1.2 : 0) + st.oy * (mobile ? 0.6 : 1);
+    mesh.current.scale.setScalar(st.sc * (mobile ? 0.62 : 1));
+    mesh.current.rotation.y = s.clock.elapsedTime * 0.07 * speed + st.seg * 0.9 + mouse.x * 0.2;
+    mesh.current.rotation.x = damp(mesh.current.rotation.x, mouse.y * 0.12, 3, dt);
+
+    // pointer → world position on the z=0 plane, used by the shader to push particles away
+    ray.set(mouse.x, -mouse.y, 0.5).unproject(camera).sub(camera.position).normalize();
+    const k = -camera.position.z / ray.z;
+    mpos.copy(camera.position).addScaledVector(ray, k);
+    u.uMouse.value.lerp(mpos, 0.2);
+    u.uMouseOn.value = damp(u.uMouseOn.value, fine ? 1 : 0, 4, dt);
   });
 
-  return (
-    <group ref={root}>
-      <mesh ref={inner}>
-        <icosahedronGeometry args={[1.05, 24]} />
-        <MeshDistortMaterial color="#0fd4a0" emissive="#063d3a" emissiveIntensity={0.9} distort={0.38} speed={reduced ? 0.4 : 2.2} metalness={0.85} roughness={0.18} />
-      </mesh>
-      <mesh ref={shell}>
-        <icosahedronGeometry args={[1.55, 1]} />
-        <meshBasicMaterial color="#ffc94a" wireframe transparent opacity={0.35} />
-      </mesh>
-      <group ref={rings}>
-        {[2.0, 2.45, 2.9].map((r, i) => (
-          <mesh key={r}>
-            <torusGeometry args={[r, 0.012 + i * 0.004, 12, 160]} />
-            <meshBasicMaterial color={i === 1 ? "#ffc94a" : "#38e8c0"} transparent opacity={0.65 - i * 0.1} />
-          </mesh>
-        ))}
-      </group>
-      <group ref={coins}>
-        {Array.from({ length: 7 }).map((_, i) => {
-          const a = (i / 7) * Math.PI * 2;
-          return (
-            <mesh key={i} position={[Math.cos(a) * 2.45, 0, Math.sin(a) * 2.45]}>
-              <cylinderGeometry args={[0.2, 0.2, 0.05, 40]} />
-              <meshStandardMaterial color="#ffc94a" metalness={1} roughness={0.22} emissive="#6b4a00" emissiveIntensity={0.6} />
-            </mesh>
-          );
-        })}
-      </group>
-    </group>
-  );
+  return <points ref={mesh} geometry={geo} material={mat} frustumCulled={false} />;
 }
 
-/* ---------- Star / data particles ---------- */
-function Particles({ scroll }: { scroll: MotionValue<number> }) {
-  const ref = useRef<THREE.Points>(null!);
-  const positions = useMemo(() => {
-    const n = 2200;
-    const arr = new Float32Array(n * 3);
-    for (let i = 0; i < n; i++) {
-      const r = 6 + Math.random() * 16;
-      const th = Math.random() * Math.PI * 2;
-      const ph = Math.acos(2 * Math.random() - 1);
-      arr[i * 3] = r * Math.sin(ph) * Math.cos(th);
-      arr[i * 3 + 1] = r * Math.sin(ph) * Math.sin(th) * 0.7;
-      arr[i * 3 + 2] = r * Math.cos(ph);
-    }
-    return arr;
-  }, []);
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime * speed;
-    ref.current.rotation.y = t * 0.02 + scroll.get() * 2.2;
-    ref.current.rotation.x = Math.sin(t * 0.05) * 0.1 + mouse.y * 0.04;
-  });
-
-  return (
-    <points ref={ref}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" array={positions} count={positions.length / 3} itemSize={3} />
-      </bufferGeometry>
-      <pointsMaterial color="#7df3d4" size={0.045} sizeAttenuation transparent opacity={0.75} depthWrite={false} blending={THREE.AdditiveBlending} />
-    </points>
-  );
-}
-
-/* ---------- Camera path driven by scroll ---------- */
-function Rig({ scroll }: { scroll: MotionValue<number> }) {
-  const look = useMemo(() => new THREE.Vector3(), []);
-  useFrame((state, dt) => {
-    const p = scroll.get();
-    const cam = state.camera;
-    const tx = Math.sin(p * Math.PI * 2) * 1.8 + mouse.x * 0.7;
-    const ty = 0.9 - p * 2.4 - mouse.y * 0.45;
-    const tz = 9.4 + Math.sin(p * Math.PI) * 1.8;
-    cam.position.x = damp(cam.position.x, tx, 2.5, dt);
-    cam.position.y = damp(cam.position.y, ty, 2.5, dt);
-    cam.position.z = damp(cam.position.z, tz, 2.5, dt);
-    look.set(0, -0.4 - p * 0.8, 0);
-    cam.lookAt(look);
+function Rig() {
+  useFrame((s, dt) => {
+    const cam = s.camera;
+    const p = Math.min(1, window.scrollY / Math.max(1, document.body.scrollHeight - window.innerHeight));
+    cam.position.x = damp(cam.position.x, mouse.x * 0.6 + Math.sin(p * 6.28) * 0.8, 2.5, dt);
+    cam.position.y = damp(cam.position.y, -mouse.y * 0.4, 2.5, dt);
+    cam.position.z = damp(cam.position.z, 10 - Math.sin(p * Math.PI) * 1.2, 2.5, dt);
+    cam.lookAt(0, 0, 0);
   });
   return null;
 }
 
-function Lights() {
-  const l1 = useRef<THREE.PointLight>(null!);
-  useFrame((s) => {
-    const t = s.clock.elapsedTime * speed;
-    l1.current.position.set(Math.cos(t * 0.5) * 6, 3 + Math.sin(t * 0.4) * 1.5, Math.sin(t * 0.5) * 6);
-  });
+function Effects() {
+  const offset = useMemo(() => new THREE.Vector2(0.0007, 0.0009), []);
   return (
-    <>
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[4, 6, 5]} intensity={1.5} color="#cffff0" />
-      <pointLight ref={l1} intensity={90} distance={22} color="#ffc94a" />
-      <pointLight position={[-6, -1, 3]} intensity={55} distance={18} color="#14e0b0" />
-    </>
-  );
-}
-
-function World() {
-  const { scrollYProgress } = useScroll();
-  return (
-    <>
-      <fog attach="fog" args={["#05070d", 8, 26]} />
-      <Lights />
-      <Rig scroll={scrollYProgress} />
-      <Particles scroll={scrollYProgress} />
-      <MarketSurface scroll={scrollYProgress} />
-      <Core scroll={scrollYProgress} />
-    </>
+    <EffectComposer multisampling={0}>
+      <Bloom mipmapBlur intensity={1.35} luminanceThreshold={0.08} luminanceSmoothing={0.5} radius={0.8} />
+      <ChromaticAberration offset={offset} radialModulation={false} modulationOffset={0} />
+      <Vignette eskil={false} offset={0.2} darkness={0.85} />
+    </EffectComposer>
   );
 }
 
@@ -248,12 +201,15 @@ export default function Scene() {
   return (
     <Boundary>
       <Canvas
-        dpr={[1, 1.6]}
-        camera={{ position: [0, 0.9, 9.4], fov: 46, near: 0.1, far: 60 }}
-        gl={{ antialias: true, powerPreference: "high-performance", alpha: true }}
+        dpr={[1, 1.5]}
+        camera={{ position: [0, 0, 10], fov: 48, near: 0.1, far: 60 }}
+        gl={{ antialias: false, powerPreference: "high-performance", alpha: false }}
         style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}
       >
-        <World />
+        <color attach="background" args={["#04060b"]} />
+        <Particles />
+        <Rig />
+        <Effects />
       </Canvas>
     </Boundary>
   );

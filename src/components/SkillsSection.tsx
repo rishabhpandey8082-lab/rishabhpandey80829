@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { motion, useScroll, useSpring, useTransform, useVelocity } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { extra } from "@/data/content";
 import { Reveal, SectionHeader, TiltCard } from "./fx";
@@ -13,6 +14,8 @@ export const SkillsSection = () => {
     [s],
   );
   const marquee = [...cloud, ...cloud];
+  const { scrollY } = useScroll();
+  const skew = useSpring(useTransform(useVelocity(scrollY), [-2500, 2500], [-14, 14], { clamp: true }), { stiffness: 180, damping: 28 });
 
   return (
     <section id="skills" className="section-padding relative overflow-hidden">
@@ -39,9 +42,9 @@ export const SkillsSection = () => {
       </div>
 
       <div className="relative mt-20 border-y border-white/5 py-5 [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]">
-        <div className="flex w-max animate-marquee gap-10 font-display text-2xl font-semibold text-foreground/20 md:text-4xl">
-          {marquee.map((m, i) => <span key={i} className="whitespace-nowrap">{m} <span className="text-primary/40">✦</span></span>)}
-        </div>
+        <motion.div style={{ skewX: skew }}><div className="flex w-max animate-marquee gap-10 font-display text-2xl font-semibold text-foreground/25 md:text-4xl">
+          {marquee.map((m, i) => <span key={i} className="whitespace-nowrap">{m} <span className="text-primary/50">✦</span></span>)}
+        </div></motion.div>
       </div>
     </section>
   );

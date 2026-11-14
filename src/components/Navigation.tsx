@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Languages, Menu, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { extra } from "@/data/content";
+import { scrollToId } from "@/lib/scroll";
 
 const ids = ["home", "about", "skills", "projects", "cases", "certs", "contact"] as const;
 
@@ -27,7 +28,7 @@ export const Navigation = () => {
 
   const go = (id: string) => {
     setOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    scrollToId(id);
   };
 
   return (

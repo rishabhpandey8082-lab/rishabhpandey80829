@@ -38,10 +38,11 @@
   }
 
   * { @apply border-border; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: auto; }
+  html.lenis, html.lenis body { height: auto; }
   body {
     @apply bg-background text-foreground font-body antialiased;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
   ::selection { background: hsl(160 84% 52% / 0.35); }
   ::-webkit-scrollbar { width: 8px; }
